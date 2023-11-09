@@ -1,0 +1,9 @@
+/* styles.css */
+.card {
+  @apply bg-white shadow-xl p-8 rounded-lg text-black text-center;
+}
+
+.title {
+  @apply text-3xl font-bold mb-4 text-black;
+  margin-top: 50px; /* Adjust the top margin as needed */
+}
