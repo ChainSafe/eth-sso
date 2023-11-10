@@ -13,14 +13,13 @@ const App = () => {
   const [scwAddress, setScwAddress] = useState("");
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      //client side code
-      const params = ethSSO.parseUrl();
-      if (params != null) {
-        const {redirectUri, chainId} = params;
-        setChainId(chainId);
-        setRedirectUri(redirectUri);
-      }
+    //client side code
+    console.log("here")
+    const params = ethSSO.parseUrl();
+    if (params != null) {
+      const {redirectUri, chainId} = params;
+      setChainId(chainId);
+      setRedirectUri(redirectUri);
     }
   },[]);
 
