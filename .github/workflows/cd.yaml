@@ -1,0 +1,35 @@
+name: CloudFlare Deploy
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '**'
+
+permissions:
+  contents: read
+  deployments: write
+  pull-requests: write
+
+jobs:
+  deploy:
+      runs-on: ubuntu-latest
+      steps:
+          - uses: actions/checkout@v3
+          - uses: actions/setup-node@v3
+            with:
+              cache: yarn
+              node-version: '20'
+          - run: yarn install --frozen-lockfile
+          - run: yarn run build
+            env:
+                NEXT_PUBLIC_RP_NAME: demo_eth_sso
+          - name: Publish to Cloudflare Pages
+            uses: cloudflare/pages-action@v1
+            with:
+              apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+              accountId: 2238a825c5aca59233eab1f221f7aefb
+              projectName: eth-sso
+              directory: ./out
+              gitHubToken: ${{ secrets.GITHUB_TOKEN }}

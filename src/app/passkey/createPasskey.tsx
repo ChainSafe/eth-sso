@@ -24,7 +24,7 @@ const CreatePassKeyCredential = async (
       challenge: challengeBuffer,
       rp: {
         name: process.env.NEXT_PUBLIC_RP_NAME ?? "demo_eth_sso",
-        id: process.env.NEXT_PUBLIC_DOMAIN ?? "localhost:3000",
+        id: process.env.NEXT_PUBLIC_DOMAIN ?? window.location.hostname,
       },
       user: {
         id: userIdBuffer,
