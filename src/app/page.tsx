@@ -4,7 +4,7 @@ import './styles.css'; // Import the styles
 import getPasskeyCredential from './passkey/getPasskey';
 import CreatePassKeyCredential from './passkey/createPasskey';
 import generateRandomString from './passkey/entropy';
-import { parseUrl, redirect } from './sso';
+import * as ethSSO from './sso';
 
 const App = () => {
   const [chainId, setChainId] = useState("");
@@ -15,7 +15,7 @@ const App = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       //client side code
-      const params = parseUrl();
+      const params = ethSSO.parseUrl();
       if (params != null) {
         const {redirectUri, chainId} = params;
         setChainId(chainId);
@@ -24,27 +24,27 @@ const App = () => {
     }
   },[]);
 
+  const redirect = (credentials: Credential, ) => {
+    const smartWallet = "0x0DA0C3e52C977Ed3cBc641fF02DD271c3ED55aFe";
+    if (credentials?.id && redirectUri) {
+      setScwAddress(smartWallet);
+      setPasskeyId(credentials.id);
+      ethSSO.redirect(redirectUri, credentials.id, smartWallet);
+    }
+  }
 
   const generatePasskey = useCallback(async () => {
     const credentials = await CreatePassKeyCredential(generateRandomString(16));
-    // TODO perform some deterministic lookup of a smart contract wallet.
-    const samrtWallet = "0x0DA0C3e52C977Ed3cBc641fF02DD271c3ED55aFe";
-    if (credentials?.id) {
-      setScwAddress(samrtWallet);
-      setPasskeyId(credentials.id);
-      redirect(redirectUri, credentials.id, samrtWallet);
+    if (credentials) {
+      redirect(credentials);
     }
   }, [])
 
   const authenticatePasskey = useCallback(async () => {
     try {
       const credentials = await getPasskeyCredential("thisisatoughchallenge");
-      // TODO perform some deterministic lookup of a smart contract wallet.
-      const samrtWallet = "0x0DA0C3e52C977Ed3cBc641fF02DD271c3ED55aFe";
-      if (credentials?.id) {
-        setScwAddress(samrtWallet);
-        setPasskeyId(credentials.id);
-        redirect(redirectUri, credentials.id, samrtWallet);
+      if (credentials) {
+        redirect(credentials);
       }
     } catch (e) {
       // Need to generate a passkey
