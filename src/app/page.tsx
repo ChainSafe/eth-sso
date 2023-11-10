@@ -16,11 +16,14 @@ const App = () => {
   const generatePasskey = async () => {
     const res = await CreatePassKeyCredential(generateRandomString(16));
     console.log(res);
+    // 1. create2 to generate smart contract wallet
+
   }
 
   const authenticatePasskey = async () => {
     const credential = await getPasskeyCredential("test");
     console.log(credential);
+    // 1. Custom loookup for samrt wallet based on providers exsiitng infra
   }
 
   return (
