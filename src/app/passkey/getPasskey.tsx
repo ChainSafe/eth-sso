@@ -2,7 +2,7 @@ const getPasskeyCredential = async (challenge: string) => {
     const challengeBuffer = Uint8Array.from(challenge, (c) => c.charCodeAt(0));
     const publicKeyCredentialRequestOptions: PublicKeyCredentialRequestOptions = {
       challenge: challengeBuffer,
-      rpId: process.env.REACT_APP_RP_DOMAIN,
+      rpId: process.env.NEXT_PUBLIC_DOMAIN ?? "localhost:3000",
       userVerification: "preferred",
       timeout: 60000,
     };

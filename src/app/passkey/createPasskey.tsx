@@ -1,5 +1,4 @@
 import React from "react";
-import 'dotenv/config';
 
 const CreatePassKeyCredential = async (
   challengeBufferString: string,
@@ -24,8 +23,8 @@ const CreatePassKeyCredential = async (
     {
       challenge: challengeBuffer,
       rp: {
-        name: "eth-sso-demo",
-        id: "http://localhost:3000",
+        name: process.env.NEXT_PUBLIC_RP_NAME ?? "demo_eth_sso",
+        id: process.env.NEXT_PUBLIC_DOMAIN ?? "localhost:3000",
       },
       user: {
         id: userIdBuffer,

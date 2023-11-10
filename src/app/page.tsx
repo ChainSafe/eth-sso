@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useCallback } from 'react';
 import './styles.css'; // Import the styles
 import getPasskeyCredential from './passkey/getPasskey';
 import CreatePassKeyCredential from './passkey/createPasskey';
@@ -7,24 +7,26 @@ import generateRandomString from './passkey/entropy';
 import { parseUrl } from './sso';
 
 const App = () => {
-  
-  const params = parseUrl();
-  if (params != null) {
-    console.log(params);
+  if (typeof window !== "undefined") {
+    //client side code
+    const params = parseUrl();
+    if (params != null) {
+      console.log(params);
+    }
   }
 
-  const generatePasskey = async () => {
+
+  const generatePasskey = useCallback(async () => {
     const res = await CreatePassKeyCredential(generateRandomString(16));
     console.log(res);
     // 1. create2 to generate smart contract wallet
+  }, [])
 
-  }
-
-  const authenticatePasskey = async () => {
+  const authenticatePasskey = useCallback(async () => {
     const credential = await getPasskeyCredential("test");
     console.log(credential);
     // 1. Custom loookup for samrt wallet based on providers exsiitng infra
-  }
+  }, [])
 
   return (
     <div className="bg-white flex flex-col items-center justify-center h-screen">

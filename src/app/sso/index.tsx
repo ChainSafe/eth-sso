@@ -9,5 +9,7 @@ export const parseUrl = () => {
 }
 
 export const redirect = (redirectUri: string, signer_uid: string, smartAccountAddress: string) => {
-    window.location.replace(`http://${redirectUri}/?signer_uid=${signer_uid}&smart_account_address=${smartAccountAddress}`);
+    if (typeof window !== "undefined") {
+        window.location.replace(`http://${redirectUri}/?signer_uid=${signer_uid}&smart_account_address=${smartAccountAddress}`);
+    }
 }
