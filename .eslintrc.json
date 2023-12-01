@@ -1,3 +1,10 @@
 {
-  "extends": "next/core-web-vitals"
+    "root": true,
+    "extends": "@chainsafe",
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "project": ["'./packages/*/tsconfig.json'", "'./examples/*/tsconfig.json'"],
+      "ecmaVersion": 2020,
+      "sourceType": "module"
+    }
 }

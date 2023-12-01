@@ -1,0 +1,37 @@
+{
+    "name": "@chainsafe/eth-sso-react",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "./dist/esm/src/index.js",
+    "types": "./dist/types/src/index.d.ts",
+    "files": [
+        "dist",
+        "!tsconfig.tsbuildinfo"
+    ],
+    "scripts": {
+        "build:clean": "rm -rf dist",
+        "build": "yarn run build:clean; tsc --build",
+        "build:watch": "yarn run build:clean; tsc --watch",
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint --ext .ts,.tsx '{src, test}/**/*.ts'",
+        "lint:fix": "yarn run lint --fix",
+        "test:unit": "exit 0"
+    },
+    "dependencies": {
+        "@chainsafe/eth-sso-ui": "workspace:^"
+    },
+    "devDependencies": {
+        "eslint": "^8.54.0",
+        "typescript": "~5.2"
+    },
+    "author": "ChainSafe <info@chainsafe.io>",
+    "license": "Apache-2.0",
+    "homepage": "https://github.com/chainsafe/eth-sso",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/chainsafe/eth-sso.git"
+    },
+    "bugs": {
+        "url": "https://github.com/chainsafe/eth-sso/issues"
+    }
+}

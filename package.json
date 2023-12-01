@@ -1,28 +1,33 @@
 {
-  "name": "eth-sso",
-  "version": "0.1.0",
+  "name": "root",
   "private": true,
-  "packageManager": "yarn@1.22",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+  "author": "ChainSafe <info@chainsafe.io>",
+  "license": "MIT",
+  "packageManager": "yarn@3.2.1",
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "examples/*"
+    ]
   },
-  "dependencies": {
-    "next": "14.0.1",
-    "react": "^18",
-    "react-dom": "^18"
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "demo": "concurrently -k -n sso-provider,react-demo \"yarn run start:demo-sso-provider\" \"yarn run start:react-demo\"",
+    "start:demo-sso-provider": "yarn workspace @chainsafe/demo-eth-sso-provider dev",
+    "start:react-demo": "yarn workspace @chainsafe/eth-sso-react-demo dev",
+    "build": "yarn workspaces foreach --exclude @chainsafe/demo-eth-sso-provider --exclude  @chainsafe/eth-sso-react-demo -vpt run build",
+    "build:watch": "yarn workspaces foreach --interlaced --parallel --verbose --exclude  @chainsafe/demo-eth-sso-provider --exclude @chainsafe/eth-sso-react-demo run build:watch",
+    "lint": "yarn workspaces foreach -vpt run lint",
+    "test:unit": "yarn workspaces foreach -vt run test:unit",
+    "test:integrations": "yarn workspaces foreach -vt run test:integrations"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "autoprefixer": "^10.0.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.0.1",
-    "postcss": "^8",
-    "tailwindcss": "^3.3.0",
-    "typescript": "^5"
+    "@chainsafe/eslint-config": "^2.1.1",
+    "@types/node": "18.15.11",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.54.0",
+    "typescript": "~5.2"
   }
 }
