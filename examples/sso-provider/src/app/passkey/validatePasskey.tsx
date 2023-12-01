@@ -1,6 +1,7 @@
-import React from "react";
-
-const validatePassKey = (storedChallenge: string, clientChallenge: string) => {
+const validatePassKey = (
+  storedChallenge: string,
+  clientChallenge: string,
+): boolean => {
   return storedChallenge === clientChallenge;
 };
 

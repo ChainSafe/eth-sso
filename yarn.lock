@@ -1431,6 +1431,7 @@ __metadata:
   dependencies:
     "@custom-elements-manifest/analyzer": ^0.6.3
     "@open-wc/testing": ^3.1.5
+    "@playwright/test": ^1.40.1
     "@rollup/plugin-node-resolve": ^13.3.0
     "@rollup/plugin-replace": ^5.0.2
     "@typescript-eslint/eslint-plugin": ^6.12.0
@@ -2119,6 +2120,17 @@ __metadata:
     picocolors: ^1.0.0
     tslib: ^2.6.0
   checksum: 7c3e68f6405a1d4c51f418d8d580e71d7bade2683d5db07e8413d8e57f7e389047eda44a2341f77a1b3085895fca7676a9d45e8812a58312524f8c4c65d501be
+  languageName: node
+  linkType: hard
+
+"@playwright/test@npm:^1.40.1":
+  version: 1.40.1
+  resolution: "@playwright/test@npm:1.40.1"
+  dependencies:
+    playwright: 1.40.1
+  bin:
+    playwright: cli.js
+  checksum: 1edbc9659fb6a9c5299cacd9a0c7d3fdc88939036642d8f367e13d267d808ae3f88ca9d00e9981e3bcd5f584ccefba38d24eda6b23d27895908f203dc35f339e
   languageName: node
   linkType: hard
 
@@ -8662,6 +8674,30 @@ __metadata:
   bin:
     playwright-core: cli.js
   checksum: 6973f34b023ee9ca7451715065afbb11c119b028ec866e44e7862118f17eafaa832d6bb388fa657124e88c290d7192cd5c125970a3c635d3d9336331ddba8d10
+  languageName: node
+  linkType: hard
+
+"playwright-core@npm:1.40.1":
+  version: 1.40.1
+  resolution: "playwright-core@npm:1.40.1"
+  bin:
+    playwright-core: cli.js
+  checksum: 56c283012974982313a6ae583b975ee4af76d52059fb9a25d9cc616a11224685ec64682b391910c795d2b12d2ab5c7eec31124722c75c0b1703a76ac9b6fd1c2
+  languageName: node
+  linkType: hard
+
+"playwright@npm:1.40.1":
+  version: 1.40.1
+  resolution: "playwright@npm:1.40.1"
+  dependencies:
+    fsevents: 2.3.2
+    playwright-core: 1.40.1
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  bin:
+    playwright: cli.js
+  checksum: 5dae164d1f69162da8d7eee52da651296fb885c76a8b36049f216975c751a0a826ff05795a1c0902dc0bd193fe606ae17d5def655f4cbcccb8d8b71afb74b950
   languageName: node
   linkType: hard
 
