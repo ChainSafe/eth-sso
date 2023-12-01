@@ -20,8 +20,8 @@
     "build": "yarn workspaces foreach --exclude @chainsafe/demo-eth-sso-provider --exclude  @chainsafe/eth-sso-react-demo -vpt run build",
     "build:watch": "yarn workspaces foreach --interlaced --parallel --verbose --exclude  @chainsafe/demo-eth-sso-provider --exclude @chainsafe/eth-sso-react-demo run build:watch",
     "lint": "yarn workspaces foreach -vpt run lint",
-    "test:unit": "yarn workspaces foreach -vpt run test:unit",
-    "test:integrations": "yarn workspaces foreach -vpt run test:integrations"
+    "test:unit": "yarn workspaces foreach -vt run test:unit",
+    "test:integrations": "yarn workspaces foreach -vt run test:integrations"
   },
   "devDependencies": {
     "@chainsafe/eslint-config": "^2.1.1",

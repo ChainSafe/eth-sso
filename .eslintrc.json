@@ -1,4 +1,10 @@
 {
     "root": true,
-    "extends": "@chainsafe"
+    "extends": "@chainsafe",
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "project": ["'./packages/*/tsconfig.json'", "'./examples/*/tsconfig.json'"],
+      "ecmaVersion": 2020,
+      "sourceType": "module"
+    }
 }

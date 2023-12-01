@@ -1,9 +1,3 @@
-/**
- * @license
- * Copyright 2019 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-
 import {LitElement, html, css} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ModalController} from './controller.js';
@@ -51,7 +45,6 @@ export class EthSSOModalElement extends LitElement {
   }
 
   override render() {
-    console.log({open: this.open});
     return this.open
       ? html`
           <div class="container">

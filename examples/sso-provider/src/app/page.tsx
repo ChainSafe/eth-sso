@@ -1,34 +1,33 @@
-'use client';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import './styles.css'; // Import the styles
-import getPasskeyCredential from './passkey/getPasskey';
-import CreatePassKeyCredential from './passkey/createPasskey';
-import generateRandomString from './passkey/entropy';
-import * as ethSSO from './sso';
-import { ECDSAProvider, getRPCProviderOwner } from '@zerodev/sdk'
-import { ZeroDevWeb3AuthWithModal } from '@zerodev/web3auth';
+"use client";
+import type { IProvider } from "@web3auth/base";
+import { ECDSAProvider, getRPCProviderOwner } from "@zerodev/sdk";
+import { ZeroDevWeb3AuthWithModal } from "@zerodev/web3auth";
+import type { ReactElement } from "react";
+import { useEffect, useMemo, useState } from "react";
+import * as ethSSO from "./sso";
+import "./styles.css"; // Import the styles
 
-const App = () => {
+const App = (): ReactElement => {
   const [chainId, setChainId] = useState("");
   const [redirectUri, setRedirectUri] = useState("");
   const [scwAddress, setScwAddress] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setIsLoading] = useState(false);
 
   useEffect(() => {
     //client side code
     const params = ethSSO.parseUrl();
     if (params != null) {
-      const {redirectUri, chainId} = params;
+      const { redirectUri, chainId } = params;
       setChainId(chainId);
       setRedirectUri(redirectUri);
     }
-  },[]);
+  }, []);
 
-  const redirect = () => {
+  const redirect = (): void => {
     if (scwAddress && redirectUri) {
-      ethSSO.redirect(redirectUri, "" smartWallet);
+      ethSSO.redirect(redirectUri, "", scwAddress);
     }
-  }
+  };
 
   // const generatePasskey = useCallback(async () => {
   //   const credentials = await CreatePassKeyCredential(generateRandomString(16));
@@ -49,42 +48,49 @@ const App = () => {
   //   }
   // }, [])
 
-  const setWallet = async (provider) => {
+  const setWallet = async (provider: IProvider): Promise<void> => {
     const ecdsaProvider = await ECDSAProvider.init({
       projectId: process.env.NEXT_PUBLIC_ZERODEV_PROJECT_ID,
-      owner: await getRPCProviderOwner(provider)
-    })
-    setScwAddress(await ecdsaProvider.getAddress())
-  }
+      owner: getRPCProviderOwner(provider),
+    });
+    setScwAddress(await ecdsaProvider.getAddress());
+    redirect();
+  };
 
   const zeroDevWeb3Auth = useMemo(() => {
-    const instance = new ZeroDevWeb3AuthWithModal([process.env.NEXT_PUBLIC_ZERODEV_PROJECT_ID], 11155111)
-    console.log(instance)
-    instance.initialize({onConnect: async () => {
-      setIsLoading(true)
-      setWallet(zeroDevWeb3Auth.provider)
-      setIsLoading(false)
-    }})
-    return instance
-  }, [])
+    const instance = new ZeroDevWeb3AuthWithModal(
+      [process.env.NEXT_PUBLIC_ZERODEV_PROJECT_ID],
+      11155111,
+    );
+    void instance.initialize({
+      onConnect: async (): Promise<void> => {
+        setIsLoading(true);
+        await setWallet(zeroDevWeb3Auth.provider);
+        setIsLoading(false);
+      },
+    });
+    return instance;
+  }, []);
 
-  const disconnect = async () => {
-    await zeroDevWeb3Auth.logout()
-    setScwAddress('')
-  }
+  const disconnect = (): void => {
+    void zeroDevWeb3Auth.logout();
+    setScwAddress("");
+  };
 
-  const handleClick = async () => {
-    setIsLoading(true)
-    zeroDevWeb3Auth.login().then(provider => {
-      console.log(provider)
-      setWallet(provider)
-      setIsLoading(false)
-    })
-    .catch(console.log)
-    .finally(() => {
-      setIsLoading(false)
-    })
-  }
+  const handleClick = (): void => {
+    setIsLoading(true);
+    zeroDevWeb3Auth
+      .login()
+      .then(async (provider) => {
+        console.log(provider);
+        await setWallet(provider);
+        setIsLoading(false);
+      })
+      .catch(console.log)
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   return (
     <div className="bg-white flex flex-col items-center justify-center h-screen">
@@ -95,24 +101,22 @@ const App = () => {
         <p>ChainId: {chainId}</p>
         <p>Smart Wallet Address: {scwAddress}</p>
         <div>
-          {
-            !!scwAddress ?
-            <button 
-                onClick={disconnect}
-                className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Disconnect
-              </button>
-            :
-            <button 
-            onClick={handleClick}
-            className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Create Smart Contract Wallet
-          </button>
-          }
-      </div>
-
+          {scwAddress ? (
+            <button
+              onClick={disconnect}
+              className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Disconnect
+            </button>
+          ) : (
+            <button
+              onClick={handleClick}
+              className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Create Smart Contract Wallet
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -13,7 +13,9 @@
         "build": "yarn run build:clean; tsc --build",
         "build:watch": "yarn run build:clean; tsc --watch",
         "typecheck": "tsc --noEmit",
-        "lint": "yarn run -T eslint . --ext .ts,.tsx"
+        "lint": "yarn run -T eslint --ext .ts,.tsx '{src, test}/**/*.ts'",
+        "lint:fix": "yarn run lint --fix",
+        "test:unit": "exit 0"
     },
     "dependencies": {
         "@chainsafe/eth-sso-ui": "workspace:^"

@@ -1,5 +1,5 @@
 import {proxy} from 'valtio/vanilla';
-import {subscribeKey} from 'valtio/utils';
+import {subscribeKey} from 'valtio/vanilla/utils';
 
 export interface ModalControllerState {
   open: boolean;
