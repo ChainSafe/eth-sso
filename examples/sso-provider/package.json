@@ -10,6 +10,9 @@
         "lint:fix": "next lint --fix"
     },
     "dependencies": {
+        "@walletconnect/sign-client": "^2.10.6",
+        "@zerodev/sdk": "^4.3.4",
+        "@zerodev/web3auth": "^4.3.5",
         "next": "14.0.1",
         "react": "^18",
         "react-dom": "^18"
