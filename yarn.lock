@@ -1470,6 +1470,7 @@ __metadata:
   resolution: "@chainsafe/eth-sso-react@workspace:packages/react"
   dependencies:
     "@chainsafe/eth-sso-ui": "workspace:^"
+    eslint: ^8.54.0
     typescript: ~5.2
   languageName: unknown
   linkType: soft
@@ -3390,8 +3391,8 @@ __metadata:
   linkType: hard
 
 "@toruslabs/base-controllers@npm:^4.0.1, @toruslabs/base-controllers@npm:^4.9.1":
-  version: 4.9.1
-  resolution: "@toruslabs/base-controllers@npm:4.9.1"
+  version: 4.10.0
+  resolution: "@toruslabs/base-controllers@npm:4.10.0"
   dependencies:
     "@ethereumjs/util": ^9.0.1
     "@metamask/rpc-errors": ^6.1.0
@@ -3405,7 +3406,7 @@ __metadata:
     loglevel: ^1.8.1
   peerDependencies:
     "@babel/runtime": 7.x
-  checksum: 38e91b91ba0d057c8bdd5f6dee9ac4b203ae077adb5a4197af1ed8e87f3016b981598da6ddcd11e3473f7446f3ed41d9bdb254595898d51d866c03f1982ffd2c
+  checksum: 9b1020bd1e83a7e04b45c0ff8f2e05a12e682c7a2c1cf0d049dda3bb466ffd2315cd6c856e413beadacad068fe5a9404fd294515fb0b66f1c5a854160aed105c
   languageName: node
   linkType: hard
 
@@ -13214,9 +13215,9 @@ __metadata:
   linkType: hard
 
 "std-env@npm:^3.4.3":
-  version: 3.5.0
-  resolution: "std-env@npm:3.5.0"
-  checksum: 0ba4efdaa2f2f9cce980be651732f6fe60011702375b376eea1d2cbca281065f8e7f3c58cec7f0b886db5fb0e427c144a50fd555529cffbcbb7b65b6457136da
+  version: 3.6.0
+  resolution: "std-env@npm:3.6.0"
+  checksum: a540b8cb011bef4bf5905e1e28f24ce37124f9d001c69224ee0025d3600144e6847bac62cd38fbd98148ab4d26ab0682b9b4d42bc863cd1cca0b9807f18aadba
   languageName: node
   linkType: hard
 
