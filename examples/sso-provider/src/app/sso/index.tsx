@@ -14,7 +14,7 @@ export const redirect = (
 ): void => {
   if (typeof window !== "undefined") {
     window.location.replace(
-      `http://${redirectUri}/?signer_uid=${signer_uid}&smart_account_address=${smartAccountAddress}`,
+      `${redirectUri}/?signer_uid=${signer_uid}&smart_account_address=${smartAccountAddress}`,
     );
   }
 };

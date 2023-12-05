@@ -9,7 +9,7 @@ export default function Home(): ReactElement {
     createEthSSOModal({
       providers: [
         //TODO: enable passing just url instead of object
-        { url: "localhost:3000" },
+        { url: "http://localhost:3000" },
         { url: "sso.chainsafe.io" },
         { url: "mpetrunic.eth" },
         { url: "sso.wallet.connect.com" },
