@@ -11,7 +11,9 @@ const App = (): ReactElement => {
   const [chainId, setChainId] = useState("");
   const [redirectUri, setRedirectUri] = useState("");
   const [scwAddress, setScwAddress] = useState("");
+  const [signerKey, setSignerKey] = useState("");
   const [, setIsLoading] = useState(false);
+  const [shouldRedirect, setShouldRedirect] = useState(true);
 
   useEffect(() => {
     //client side code
@@ -23,11 +25,16 @@ const App = (): ReactElement => {
     }
   }, []);
 
-  const redirect = (): void => {
-    if (scwAddress && redirectUri) {
-      ethSSO.redirect(redirectUri, "", scwAddress);
+  useEffect(() => {
+    if (shouldRedirect && scwAddress && signerKey && chainId && redirectUri) {
+      setShouldRedirect(false);
+      ethSSO.redirect(
+        redirectUri,
+        `did:eth:${chainId}:${signerKey}`,
+        scwAddress,
+      );
     }
-  };
+  }, [shouldRedirect, scwAddress, signerKey, chainId, redirectUri]);
 
   // const generatePasskey = useCallback(async () => {
   //   const credentials = await CreatePassKeyCredential(generateRandomString(16));
@@ -49,12 +56,14 @@ const App = (): ReactElement => {
   // }, [])
 
   const setWallet = async (provider: IProvider): Promise<void> => {
+    const owner = getRPCProviderOwner(provider);
     const ecdsaProvider = await ECDSAProvider.init({
       projectId: process.env.NEXT_PUBLIC_ZERODEV_PROJECT_ID,
-      owner: getRPCProviderOwner(provider),
+      owner,
     });
     setScwAddress(await ecdsaProvider.getAddress());
-    redirect();
+    const address = await owner.getAddress();
+    setSignerKey(address);
   };
 
   const zeroDevWeb3Auth = useMemo(() => {
@@ -75,6 +84,7 @@ const App = (): ReactElement => {
   const disconnect = (): void => {
     void zeroDevWeb3Auth.logout();
     setScwAddress("");
+    setSignerKey("");
   };
 
   const handleClick = (): void => {
