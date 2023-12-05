@@ -13,7 +13,7 @@ const App = (): ReactElement => {
   const [scwAddress, setScwAddress] = useState("");
   const [signerKey, setSignerKey] = useState("");
   const [, setIsLoading] = useState(false);
-  const [shouldRedirect, setShouldRedirect] = useState(true);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
     //client side code
@@ -26,15 +26,19 @@ const App = (): ReactElement => {
   }, []);
 
   useEffect(() => {
-    if (shouldRedirect && scwAddress && signerKey && chainId && redirectUri) {
-      setShouldRedirect(false);
-      ethSSO.redirect(
-        redirectUri,
-        `did:eth:${chainId}:${signerKey}`,
-        scwAddress,
+    if (!isRedirecting && scwAddress && signerKey && chainId && redirectUri) {
+      setIsRedirecting(true);
+      setTimeout(
+        () =>
+          ethSSO.redirect(
+            redirectUri,
+            `did:eth:${chainId}:${signerKey}`,
+            scwAddress,
+          ),
+        2000,
       );
     }
-  }, [shouldRedirect, scwAddress, signerKey, chainId, redirectUri]);
+  }, [isRedirecting, scwAddress, signerKey, chainId, redirectUri]);
 
   // const generatePasskey = useCallback(async () => {
   //   const credentials = await CreatePassKeyCredential(generateRandomString(16));
@@ -92,7 +96,6 @@ const App = (): ReactElement => {
     zeroDevWeb3Auth
       .login()
       .then(async (provider) => {
-        console.log(provider);
         await setWallet(provider);
         setIsLoading(false);
       })
@@ -105,6 +108,7 @@ const App = (): ReactElement => {
   return (
     <div className="bg-white flex flex-col items-center justify-center h-screen">
       <h1 className="title">ETH-SSO</h1>
+      {isRedirecting ? <b>Connected! Redirecting, please wait...</b> : null}
       <div className="card">
         <p>ETH-SSO</p>
         <p>Redirect URI: {redirectUri}</p>

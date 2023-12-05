@@ -26,7 +26,6 @@ export function useEthSSOModal() {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async function open(): Promise<void> {
-    console.log("Modal controller open");
     ModalController.open();
     ModalController.events.addEventListener("providerSelected", (evt) => {
       //open popup
@@ -37,6 +36,7 @@ export function useEthSSOModal() {
       const url = `${
         (evt as CustomEvent<EthSSOProvider>).detail.url
       }?redirect_uri=http://localhost:3001&chain_id=1`;
+      // TODO: remove hardcoded dapp
 
       const popup = window.open(
         url,
@@ -46,15 +46,33 @@ export function useEthSSOModal() {
           height=${height}, top=${top}, left=${left}`,
       );
 
-      //TODO: monitor for popup url change (on redirect) best to loop and check every 100ms
-      const currentUrl = popup?.location.href;
-      if (!currentUrl) {
-        return;
+      if (popup) {
+        waitAndParsePopupResults(popup);
+      } else {
+        // TODO: handle error
       }
-      const searchParams = new URL(currentUrl).searchParams;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const scwAddress = searchParams.get("smart_account_address");
     });
+  }
+
+  function waitAndParsePopupResults(popup: Window): void {
+    const initialUrl = popup?.location.href;
+    const interval = setInterval(() => {
+      try {
+        const currentUrl = popup.location.href;
+        if (currentUrl && currentUrl !== initialUrl) {
+          const searchParams = new URL(currentUrl).searchParams;
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const scwAddress = searchParams.get("smart_account_address");
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const signerKey = searchParams.get("signer_key");
+          clearInterval(interval);
+          popup.close();
+        }
+      } catch (e) {
+        /* Ignore DOMException while loading */
+      }
+    }, 100);
+    // TODO: Timeout at some point?
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
