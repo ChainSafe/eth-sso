@@ -2,32 +2,36 @@ import type { EthSSOProvider } from "@chainsafe/eth-sso-ui";
 import { ModalController } from "@chainsafe/eth-sso-ui";
 import { EthSSOModal } from "./modal";
 
-declare global {
-  interface Window {
-    ethSSOModal?: EthSSOModal;
-  }
-}
+let ethSSOModalGlobal: EthSSOModal | undefined = undefined;
 
-export function createEthSSOModal(options?: {
-  providers: EthSSOProvider[];
-}): void {
-  if (!window.ethSSOModal) {
-    window.ethSSOModal = new EthSSOModal(options);
+export function createEthSSOModal(
+  options: ConstructorParameters<typeof EthSSOModal>[0],
+): void {
+  if (!ethSSOModalGlobal) {
+    ethSSOModalGlobal = new EthSSOModal(options);
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useEthSSOModal() {
-  if (!window.ethSSOModal) {
+  if (!ethSSOModalGlobal) {
     throw new Error(
       'Please call "createWeb3Modal" before using "useWeb3Modal" hook',
     );
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
-  async function open(): Promise<void> {
-    console.log("Modal controller open");
-    ModalController.open();
+  async function open(options: {
+    sessionKeyPublic: string;
+    chainId: string;
+  }): Promise<void> {
+    if (!ethSSOModalGlobal) {
+      throw new Error(
+        'Please call "createWeb3Modal" before using "useWeb3Modal" hook',
+      );
+    }
+    ethSSOModalGlobal.open();
+    const redirectUrl = ethSSOModalGlobal.options.redirectUrl;
     ModalController.events.addEventListener("providerSelected", (evt) => {
       //open popup
       const width = 600,
@@ -36,7 +40,7 @@ export function useEthSSOModal() {
       const top = window.innerHeight / 2 - height / 2;
       const url = `${
         (evt as CustomEvent<EthSSOProvider>).detail.url
-      }?redirect_uri=http://localhost:3001&chain_id=1`;
+      }?redirect_uri=${redirectUrl}&chain_id=${options.chainId}`;
 
       const popup = window.open(
         url,
@@ -59,7 +63,12 @@ export function useEthSSOModal() {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async function close(): Promise<void> {
-    ModalController.close();
+    if (!ethSSOModalGlobal) {
+      throw new Error(
+        'Please call "createWeb3Modal" before using "useWeb3Modal" hook',
+      );
+    }
+    ethSSOModalGlobal.close();
   }
 
   function onProviderSelected(

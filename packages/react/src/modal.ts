@@ -2,15 +2,17 @@ import type { EthSSOModalElement, EthSSOProvider } from "@chainsafe/eth-sso-ui";
 import { ModalController } from "@chainsafe/eth-sso-ui";
 
 export class EthSSOModal {
-  private modalElement: EthSSOModalElement;
+  private modalElement?: EthSSOModalElement;
 
-  constructor(options?: { providers: EthSSOProvider[] }) {
-    this.modalElement = document.createElement("eth-sso-modal");
-    this.modalElement.providers.push(...(options?.providers ?? []));
-    document.body.insertAdjacentElement("beforeend", this.modalElement);
-  }
+  constructor(
+    public options: { providers: EthSSOProvider[]; redirectUrl: string },
+  ) {}
 
   public open(): void {
+    console.log("creating element");
+    this.modalElement = document.createElement("eth-sso-modal");
+    this.modalElement.providers.push(...(this.options?.providers ?? []));
+    document.body.insertAdjacentElement("beforeend", this.modalElement);
     ModalController.open();
   }
 
