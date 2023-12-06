@@ -35,7 +35,7 @@ const App = (): ReactElement => {
             `did:eth:${chainId}:${signerKey}`,
             scwAddress,
           ),
-        2000,
+        3000,
       );
     }
   }, [isRedirecting, scwAddress, signerKey, chainId, redirectUri]);

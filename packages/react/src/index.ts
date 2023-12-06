@@ -1,4 +1,4 @@
-import type { EthSSOProvider } from "@chainsafe/eth-sso-ui";
+import type { EthSSOProvider, UserAccount } from "@chainsafe/eth-sso-ui";
 import { ModalController } from "@chainsafe/eth-sso-ui";
 import { EthSSOModal } from "./modal";
 
@@ -61,12 +61,18 @@ export function useEthSSOModal() {
         const currentUrl = popup.location.href;
         if (currentUrl && currentUrl !== initialUrl) {
           const searchParams = new URL(currentUrl).searchParams;
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const scwAddress = searchParams.get("smart_account_address");
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const smartAccountAddress = searchParams.get("smart_account_address");
           const signerKey = searchParams.get("signer_key");
-          clearInterval(interval);
-          popup.close();
+
+          if (smartAccountAddress && signerKey) {
+            ModalController.setAuthentication({
+              smartAccountAddress,
+              signerKey,
+            });
+            clearInterval(interval);
+            popup.close();
+            void close();
+          }
         }
       } catch (e) {
         /* Ignore DOMException while loading */
@@ -80,6 +86,14 @@ export function useEthSSOModal() {
     ModalController.close();
   }
 
+  function onAuthenticationSuccess(
+    callback: (account: UserAccount) => void,
+  ): void {
+    ModalController.events.addEventListener("authenticationSuccess", (evt) => {
+      void callback((evt as CustomEvent<UserAccount>).detail);
+    });
+  }
+
   function onProviderSelected(
     callback: (providerUrl: string) => Promise<void> | void,
   ): void {
@@ -88,5 +102,5 @@ export function useEthSSOModal() {
     });
   }
 
-  return { open, close, onProviderSelected };
+  return { open, close, onAuthenticationSuccess, onProviderSelected };
 }

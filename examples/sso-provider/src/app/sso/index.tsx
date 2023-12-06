@@ -9,12 +9,12 @@ export const parseUrl = (): { redirectUri: string; chainId: string } => {
 
 export const redirect = (
   redirectUri: string,
-  signer_uid: string,
+  signerKey: string,
   smartAccountAddress: string,
 ): void => {
   if (typeof window !== "undefined") {
     window.location.replace(
-      `${redirectUri}/?signer_uid=${signer_uid}&smart_account_address=${smartAccountAddress}`,
+      `${redirectUri}/?signer_key=${signerKey}&smart_account_address=${smartAccountAddress}`,
     );
   }
 };
