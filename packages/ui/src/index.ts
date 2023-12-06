@@ -1,3 +1,4 @@
 export {ModalController} from './controller';
 export {EthSSOModalElement} from './modal';
-export {EthSSOProvider} from './types';
+export {EthSSOProvider, UserAccount} from './types';
+export {PopupEvents} from './popupEvents';

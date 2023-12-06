@@ -11,7 +11,9 @@ const App = (): ReactElement => {
   const [chainId, setChainId] = useState("");
   const [redirectUri, setRedirectUri] = useState("");
   const [scwAddress, setScwAddress] = useState("");
+  const [signerKey, setSignerKey] = useState("");
   const [, setIsLoading] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
     //client side code
@@ -23,11 +25,20 @@ const App = (): ReactElement => {
     }
   }, []);
 
-  const redirect = (): void => {
-    if (scwAddress && redirectUri) {
-      ethSSO.redirect(redirectUri, "", scwAddress);
+  useEffect(() => {
+    if (!isRedirecting && scwAddress && signerKey && chainId && redirectUri) {
+      setIsRedirecting(true);
+      setTimeout(
+        () =>
+          ethSSO.redirect(
+            redirectUri,
+            `did:eth:${chainId}:${signerKey}`,
+            scwAddress,
+          ),
+        3000,
+      );
     }
-  };
+  }, [isRedirecting, scwAddress, signerKey, chainId, redirectUri]);
 
   // const generatePasskey = useCallback(async () => {
   //   const credentials = await CreatePassKeyCredential(generateRandomString(16));
@@ -49,12 +60,14 @@ const App = (): ReactElement => {
   // }, [])
 
   const setWallet = async (provider: IProvider): Promise<void> => {
+    const owner = getRPCProviderOwner(provider);
     const ecdsaProvider = await ECDSAProvider.init({
       projectId: process.env.NEXT_PUBLIC_ZERODEV_PROJECT_ID,
-      owner: getRPCProviderOwner(provider),
+      owner,
     });
     setScwAddress(await ecdsaProvider.getAddress());
-    redirect();
+    const address = await owner.getAddress();
+    setSignerKey(address);
   };
 
   const zeroDevWeb3Auth = useMemo(() => {
@@ -75,6 +88,7 @@ const App = (): ReactElement => {
   const disconnect = (): void => {
     void zeroDevWeb3Auth.logout();
     setScwAddress("");
+    setSignerKey("");
   };
 
   const handleClick = (): void => {
@@ -82,7 +96,6 @@ const App = (): ReactElement => {
     zeroDevWeb3Auth
       .login()
       .then(async (provider) => {
-        console.log(provider);
         await setWallet(provider);
         setIsLoading(false);
       })
@@ -95,6 +108,7 @@ const App = (): ReactElement => {
   return (
     <div className="bg-white flex flex-col items-center justify-center h-screen">
       <h1 className="title">ETH-SSO</h1>
+      {isRedirecting ? <b>Connected! Redirecting, please wait...</b> : null}
       <div className="card">
         <p>ETH-SSO</p>
         <p>Redirect URI: {redirectUri}</p>
