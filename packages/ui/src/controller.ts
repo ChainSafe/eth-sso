@@ -1,6 +1,5 @@
 import {proxy} from 'valtio/vanilla';
 import {subscribeKey} from 'valtio/vanilla/utils';
-import type {UserAccount} from './types';
 
 export interface ModalControllerState {
   open: boolean;
@@ -33,14 +32,6 @@ export const ModalController = {
     this.events.dispatchEvent(
       new CustomEvent<{url: string}>('providerSelected', {
         detail: {url: providerUrl},
-      })
-    );
-  },
-
-  setAuthentication(account: UserAccount) {
-    this.events.dispatchEvent(
-      new CustomEvent<UserAccount>('authenticationSuccess', {
-        detail: account,
       })
     );
   },

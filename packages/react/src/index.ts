@@ -1,5 +1,5 @@
 import type { EthSSOProvider, UserAccount } from "@chainsafe/eth-sso-ui";
-import { ModalController } from "@chainsafe/eth-sso-ui";
+import { ModalController, PopupEvents } from "@chainsafe/eth-sso-ui";
 import { EthSSOModal } from "./modal";
 
 declare global {
@@ -65,7 +65,7 @@ export function useEthSSOModal() {
           const signerKey = searchParams.get("signer_key");
 
           if (smartAccountAddress && signerKey) {
-            ModalController.setAuthentication({
+            PopupEvents.setAuthentication({
               smartAccountAddress,
               signerKey,
             });
@@ -89,7 +89,7 @@ export function useEthSSOModal() {
   function onAuthenticationSuccess(
     callback: (account: UserAccount) => void,
   ): void {
-    ModalController.events.addEventListener("authenticationSuccess", (evt) => {
+    PopupEvents.events.addEventListener("authenticationSuccess", (evt) => {
       void callback((evt as CustomEvent<UserAccount>).detail);
     });
   }
