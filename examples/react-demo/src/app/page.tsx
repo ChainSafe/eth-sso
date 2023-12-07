@@ -7,12 +7,12 @@ import type { ReactElement } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { eth } from "web3";
 
-const SEPOLIA_CHAIN_ID = "11155111";
+const SEPOLIA_CHAIN_ID = "0xaa36a7";
 
 createEthSSOModal({
   providers: [
     //TODO: enable passing just url instead of object
-    { url: "localhost:3000" },
+    { url: "http://localhost:3000" },
     // { url: "sso.chainsafe.io" },
     // { url: "mpetrunic.eth" },
     // { url: "sso.wallet.connect.com" },
@@ -21,11 +21,14 @@ createEthSSOModal({
 });
 
 export default function Home(): ReactElement {
-  const { open, close } = useEthSSOModal();
-
+  const { open, close, onProviderSelected, onAuthenticationSuccess } =
+    useEthSSOModal();
   const [sessionKey, setSessionKey] = useState<eth.accounts.Web3Account | null>(
     null,
   );
+  const [selectedSSOProvider, setSSOProvider] = useState("");
+  const [smartAccountAddress, setSmartAccountAddress] = useState("");
+  const [signerKey, setSignerKey] = useState("");
 
   const sessionKeyPublic = useMemo(() => {
     if (sessionKey) {
@@ -41,28 +44,35 @@ export default function Home(): ReactElement {
   }, []);
 
   useEffect(() => {
-    //TODO: move to react SDK
-    const searchParams = new URLSearchParams(document.location.search);
-    const serializedSessionKey = searchParams.get("serialized_session_key");
-    if (!serializedSessionKey || !sessionKey) {
-      return;
-    }
-    const sessionKeyParams = {
-      ...SessionKeyProvider.deserializeSessionKeyParams(serializedSessionKey),
-      sessionKey: sessionKey.privateKey,
-    };
+    onProviderSelected((url) => {
+      setSSOProvider(url);
+    });
 
-    void (async function () {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const sessionKeyProvider = await SessionKeyProvider.fromSessionKeyParams({
-        projectId: "162fa3a7-2e4a-4197-a349-1fff88976340",
-        sessionKeyParams,
-      });
+    if (!sessionKey) return;
 
-      // const { hash } = await sessionKeyProvider.sendUserOperation({
-      //   // ...use the session key provider as you normally would
-      // })
-    })();
+    onAuthenticationSuccess((account) => {
+      setSmartAccountAddress(account.smartAccountAddress);
+      setSignerKey(account.signerKey);
+      const sessionKeyParams = {
+        ...SessionKeyProvider.deserializeSessionKeyParams(
+          account.serializedSessionKey,
+        ),
+        sessionPrivateKey: sessionKey.privateKey as `0x${string}`,
+      };
+
+      void (async function () {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const sessionKeyProvider =
+          await SessionKeyProvider.fromSessionKeyParams({
+            projectId: "162fa3a7-2e4a-4197-a349-1fff88976340",
+            sessionKeyParams,
+          });
+
+        // const { hash } = await sessionKeyProvider.sendUserOperation({
+        //   // ...use the session key provider as you normally would
+        // })
+      })();
+    });
   }, [sessionKey]);
 
   const openModalClick = useCallback(() => {
@@ -120,6 +130,13 @@ export default function Home(): ReactElement {
           Close Modal
         </Button>
       </div>
+      {selectedSSOProvider && (
+        <p>Choosen ETH SSO Provider: {selectedSSOProvider}</p>
+      )}
+      {smartAccountAddress && (
+        <p>Smart Contract Account address: {smartAccountAddress}</p>
+      )}
+      {signerKey && <p>Owner key: {signerKey}</p>}
     </main>
   );
 }

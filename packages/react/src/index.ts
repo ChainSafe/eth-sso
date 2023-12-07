@@ -1,6 +1,8 @@
 import type { EthSSOProvider } from "@chainsafe/eth-sso-ui";
 import { ModalController } from "@chainsafe/eth-sso-ui";
 import { EthSSOModal } from "./modal";
+import type { UserAccount } from "./popupEvents";
+import { PopupEvents } from "./popupEvents";
 
 let ethSSOModalGlobal: EthSSOModal | undefined = undefined;
 
@@ -40,25 +42,61 @@ export function useEthSSOModal() {
       const top = window.innerHeight / 2 - height / 2;
       const url = `${
         (evt as CustomEvent<EthSSOProvider>).detail.url
-      }?redirect_uri=${redirectUrl}&chain_id=${options.chainId}`;
+      }?redirect_uri=${redirectUrl}&chain_id=${
+        options.chainId
+      }&session_public_key=${options.sessionKeyPublic}`;
+      // TODO: remove hardcoded dapp
 
       const popup = window.open(
         url,
         "",
         `toolbar=no, location=no, directories=no, status=no, menubar=no, 
-          scrollbars=no, resizable=no, copyhistory=no, width=${width}, 
+          scrollbars=no, resizable=yes, copyhistory=no, width=${width}, 
           height=${height}, top=${top}, left=${left}`,
       );
 
-      //TODO: monitor for popup url change (on redirect) best to loop and check every 100ms
-      const currentUrl = popup?.location.href;
-      if (!currentUrl) {
-        return;
+      if (popup) {
+        waitAndParsePopupResults(popup);
+      } else {
+        // TODO: handle error
       }
-      const searchParams = new URL(currentUrl).searchParams;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const scwAddress = searchParams.get("smart_account_address");
     });
+  }
+
+  function waitAndParsePopupResults(popup: Window): void {
+    const initialUrl = popup?.location.href;
+    const interval = setInterval(() => {
+      try {
+        const currentUrl = popup.location.href;
+        console.log({ currentUrl, initialUrl });
+        if (currentUrl && currentUrl !== initialUrl) {
+          const searchParams = new URL(currentUrl).searchParams;
+          const smartAccountAddress = searchParams.get("smart_account_address");
+          const signerKey = searchParams.get("signer_key");
+          const serializedSessionKey = searchParams.get(
+            "serialized_session_key",
+          );
+          console.log({
+            smartAccountAddress,
+            signerKey,
+            serializedSessionKey,
+          });
+          if (smartAccountAddress && signerKey && serializedSessionKey) {
+            PopupEvents.setAuthentication({
+              smartAccountAddress,
+              signerKey,
+              serializedSessionKey,
+            });
+            clearInterval(interval);
+            popup.close();
+            void close();
+          }
+        }
+      } catch (e) {
+        /* Ignore DOMException while loading */
+      }
+    }, 100);
+    // TODO: Timeout at some point?
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
@@ -71,6 +109,14 @@ export function useEthSSOModal() {
     ethSSOModalGlobal.close();
   }
 
+  function onAuthenticationSuccess(
+    callback: (account: UserAccount) => void,
+  ): void {
+    PopupEvents.events.addEventListener("authenticationSuccess", (evt) => {
+      void callback((evt as CustomEvent<UserAccount>).detail);
+    });
+  }
+
   function onProviderSelected(
     callback: (providerUrl: string) => Promise<void> | void,
   ): void {
@@ -79,5 +125,5 @@ export function useEthSSOModal() {
     });
   }
 
-  return { open, close, onProviderSelected };
+  return { open, close, onAuthenticationSuccess, onProviderSelected };
 }

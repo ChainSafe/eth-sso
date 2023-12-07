@@ -20,7 +20,7 @@ export const redirect = (
 ): void => {
   if (typeof window !== "undefined") {
     window.location.replace(
-      `http://${redirectUri}/?signer_key=${signerKey}&smart_account_address=${smartAccountAddress}&serialized_session_key=${serializedSessionKeyParams}`,
+      `${redirectUri}?signer_key=${signerKey}&smart_account_address=${smartAccountAddress}&serialized_session_key=${serializedSessionKeyParams}`,
     );
   }
 };
