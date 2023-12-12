@@ -1475,7 +1475,6 @@ __metadata:
     postcss: ^8
     react: ^18
     react-dom: ^18
-    react-iframe: ^1.8.5
     tailwindcss: ^3.3.0
     typescript: ^5
     web3: ^4.2.2
@@ -12768,17 +12767,6 @@ __metadata:
     react-native:
       optional: true
   checksum: 955db09fb83bc68aa9fe7ed11c95fb3e9dc5ab95e85854f169c07a9e71f9154d2cc01f46e343801e2478d5de86475e7a19ec677bec532c3870cb7a01246a6a86
-  languageName: node
-  linkType: hard
-
-"react-iframe@npm:^1.8.5":
-  version: 1.8.5
-  resolution: "react-iframe@npm:1.8.5"
-  dependencies:
-    object-assign: ^4.1.1
-  peerDependencies:
-    react: ">=16.x.x"
-  checksum: ae5609bb88d9f36bd130d7a98cfc3067f8400ab57b29a6a72e07a20f882383f1807cb97c45dc8c536046ce2584d953780d4b6611edd66e6eea082555e5c0d62d
   languageName: node
   linkType: hard
 
