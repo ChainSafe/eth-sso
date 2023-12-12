@@ -52,7 +52,6 @@ const App = (): ReactElement => {
     if (!chainId) return;
     void (async function () {
       try {
-        console.log("Initializing web3auth", { chainId });
         const web3AuthID =
           "BEjNZMt6TPboj3TfHM06MP8Yxz7cKQX6eK3KZzVhrIMi7jALcZHxJv5o3fDLM7EL4QfPlf2AV_qe155vyR3QxiU";
         const instance = new Web3Auth({

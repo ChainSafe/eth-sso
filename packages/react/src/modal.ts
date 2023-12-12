@@ -9,7 +9,6 @@ export class EthSSOModal {
   ) {}
 
   public open(): void {
-    console.log("creating element");
     this.modalElement = document.createElement("eth-sso-modal");
     this.modalElement.providers.push(...(this.options?.providers ?? []));
     document.body.insertAdjacentElement("beforeend", this.modalElement);
