@@ -68,7 +68,6 @@ export function useEthSSOModal() {
     const interval = setInterval(() => {
       try {
         const currentUrl = popup.location.href;
-        console.log({ currentUrl, initialUrl });
         if (currentUrl && currentUrl !== initialUrl) {
           const searchParams = new URL(currentUrl).searchParams;
           const smartAccountAddress = searchParams.get("smart_account_address");
@@ -76,11 +75,6 @@ export function useEthSSOModal() {
           const serializedSessionKey = searchParams.get(
             "serialized_session_key",
           );
-          console.log({
-            smartAccountAddress,
-            signerKey,
-            serializedSessionKey,
-          });
           if (smartAccountAddress && signerKey && serializedSessionKey) {
             PopupEvents.setAuthentication({
               smartAccountAddress,

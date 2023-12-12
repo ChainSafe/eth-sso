@@ -75,11 +75,6 @@ const CreatePassKeyCredential = async (
       attestation: "direct",
     };
 
-  console.log(
-    "✅  publicKeyCredentialCreationOptions : ",
-    publicKeyCredentialCreationOptions,
-  );
-
   return await navigator.credentials.create({
     publicKey: publicKeyCredentialCreationOptions,
   });
