@@ -19,14 +19,9 @@ export const redirect = (
   serializedSessionKeyParams: string,
 ): void => {
   if (typeof window !== "undefined") {
+    // TODO: serialized session key is not part of ERC
     window.location.replace(
       `${redirectUri}?signer_key=${signerKey}&smart_account_address=${smartAccountAddress}&serialized_session_key=${serializedSessionKeyParams}`,
     );
-  }
-};
-
-export const redirectError = (redirectUri: string, error: string): void => {
-  if (typeof window !== "undefined") {
-    window.location.replace(`http://${redirectUri}/?error=${error}`);
   }
 };
