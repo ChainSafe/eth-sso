@@ -6,6 +6,7 @@ import { SessionKeyProvider } from "@zerodev/sdk";
 import type { ReactElement } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { eth } from "web3";
+import { TransactionCard } from "./transaction";
 
 const SEPOLIA_CHAIN_ID = "0xaa36a7";
 
@@ -29,6 +30,8 @@ export default function Home(): ReactElement {
   const [selectedSSOProvider, setSSOProvider] = useState("");
   const [smartAccountAddress, setSmartAccountAddress] = useState("");
   const [signerKey, setSignerKey] = useState("");
+  const [sessionKeyProvider, setSessionKeyProvider] =
+    useState<null | SessionKeyProvider>(null);
 
   const sessionKeyPublic = useMemo(() => {
     if (sessionKey) {
@@ -52,7 +55,13 @@ export default function Home(): ReactElement {
 
     onAuthenticationSuccess((account) => {
       setSmartAccountAddress(account.smartAccountAddress);
-      setSignerKey(account.signerKey);
+      setSignerKey(account.signerKey as `did:secp256k1:${string}`);
+      console.log("sessionKey: ", sessionKey);
+      console.log("account: ", account);
+      console.log("deseriaized session key: ", SessionKeyProvider.deserializeSessionKeyParams(
+        account.serializedSessionKey,
+      ));
+
       const sessionKeyParams = {
         ...SessionKeyProvider.deserializeSessionKeyParams(
           account.serializedSessionKey,
@@ -61,19 +70,20 @@ export default function Home(): ReactElement {
       };
 
       void (async function () {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const sessionKeyProvider =
-          await SessionKeyProvider.fromSessionKeyParams({
-            projectId: "162fa3a7-2e4a-4197-a349-1fff88976340",
-            sessionKeyParams,
-          });
-
-        // const { hash } = await sessionKeyProvider.sendUserOperation({
-        //   // ...use the session key provider as you normally would
-        // })
+        const provider = await SessionKeyProvider.fromSessionKeyParams({
+          projectId: "162fa3a7-2e4a-4197-a349-1fff88976340",
+          sessionKeyParams,
+        });
+        console.log("provider: ", provider)
+        setSessionKeyProvider(provider);
       })();
     });
-  }, [sessionKey]);
+  }, [
+    onAuthenticationSuccess,
+    onProviderSelected,
+    sessionKey,
+    setSessionKeyProvider,
+  ]);
 
   const openModalClick = useCallback(() => {
     //open eth sso modal and pass sessions key and chain id
@@ -107,6 +117,12 @@ export default function Home(): ReactElement {
           Session Public Key: <span>{sessionKeyPublic ?? "Generating..."}</span>
         </p>
       </div>
+      {sessionKeyProvider && (
+        <TransactionCard
+          sessionKeyProvider={sessionKeyProvider}
+          address={sessionKey?.address}
+        />
+      )}
       <div
         style={{
           display: "flex",
@@ -115,13 +131,15 @@ export default function Home(): ReactElement {
           justifyContent: "center",
         }}
       >
-        <Button
-          style={{ margin: "0 10px" }}
-          variant="outlined"
-          onClick={openModalClick}
-        >
-          Connect Smart Contract Account
-        </Button>
+        {!sessionKeyProvider && (
+          <Button
+            style={{ margin: "0 10px" }}
+            variant="outlined"
+            onClick={openModalClick}
+          >
+            Connect Smart Contract Account
+          </Button>
+        )}
         <Button
           style={{ margin: "0 10px" }}
           variant="outlined"

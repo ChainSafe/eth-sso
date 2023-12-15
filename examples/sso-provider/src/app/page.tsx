@@ -127,9 +127,9 @@ const App = (): ReactElement => {
             // The UNIX timestamp at which the session key becomes valid
             validAfter: 0,
             // The UNIX timestamp at which the session key becomes invalid
-            validUntil: 0,
+            validUntil: 1734264251,
             //TODO: configure permissions https://docs.zerodev.app/use-wallets/use-session-keys#signing-the-key-and-its-scope
-            permissions: [],
+            // permissions: [],
           },
           usePaymaster: true,
         });
