@@ -9,9 +9,11 @@ export class EthSSOModal {
   ) {}
 
   public open(): void {
-    this.modalElement = document.createElement("eth-sso-modal");
-    this.modalElement.providers.push(...(this.options?.providers ?? []));
-    document.body.insertAdjacentElement("beforeend", this.modalElement);
+    if (!this.modalElement) {
+      this.modalElement = document.createElement("eth-sso-modal");
+      this.modalElement.providers.push(...(this.options?.providers ?? []));
+      document.body.insertAdjacentElement("beforeend", this.modalElement);
+    }
     ModalController.open();
   }
 

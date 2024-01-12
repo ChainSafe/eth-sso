@@ -49,8 +49,32 @@ export class EthSSOModalElement extends LitElement {
     super();
     ModalController.onChange('open', (open) => {
       this.open = open;
+      if (this.open) {
+        document.body.addEventListener('click', this.onBodyClick);
+        document.body.addEventListener('keyup', this.onKeyUp);
+      }
     });
   }
+
+  override disconnectedCallback() {
+    super.connectedCallback();
+    document.removeEventListener('click', this.onBodyClick);
+    document.removeEventListener('keyup', this.onKeyUp);
+  }
+
+  private onBodyClick = (event: MouseEvent) => {
+    if (this.open && !event.composedPath().includes(this)) {
+      document.removeEventListener('click', this.onBodyClick);
+      ModalController.close();
+    }
+  };
+
+  private onKeyUp = (event: KeyboardEvent) => {
+    if (this.open && event.key === 'Escape') {
+      document.removeEventListener('keyup', this.onKeyUp);
+      ModalController.close();
+    }
+  };
 
   override render() {
     return this.open
@@ -67,7 +91,7 @@ export class EthSSOModalElement extends LitElement {
                   ></eth-sso-modal-provider-button>`
               )}
             </div>
-            <eth-sso-modal-provider-input />
+            <eth-sso-modal-provider-input></eth-sso-modal-provider-input>
           </div>
         `
       : null;

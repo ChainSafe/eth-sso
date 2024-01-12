@@ -34,5 +34,6 @@ export const ModalController = {
         detail: {url: providerUrl},
       })
     );
+    this.close();
   },
 };
