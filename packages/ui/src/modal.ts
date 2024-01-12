@@ -2,6 +2,8 @@ import {LitElement, html, css} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {ModalController} from './controller.js';
 import {EthSSOProvider} from './types.js';
+import './components/provider_button.js';
+import './components/provider_input.js';
 
 /**
  * An example element.
@@ -22,7 +24,6 @@ export class EthSSOModalElement extends LitElement {
       background: none;
       display: block;
       color: black;
-      padding: 16px;
       z-index: 999;
       position: absolute;
       left: 50%;
@@ -31,9 +32,16 @@ export class EthSSOModalElement extends LitElement {
     }
     :host .container {
       width: 500px;
-      height: 600px;
+      height: 400px;
+      padding: 2rem;
       background: white;
-      border: 5px solid gray;
+      border-radius: 6px;
+      box-shadow:
+        0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1),
+        0 0 0 1px rgba(10, 10, 10, 0.02);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
   `;
 
@@ -48,22 +56,21 @@ export class EthSSOModalElement extends LitElement {
     return this.open
       ? html`
           <div class="container">
-            <h1>Choose your ETH SSO Provider:</h1>
-            ${this.providers.map(
-              (provider) =>
-                html`<button
-                  @click=${() => this._handleItemClick(provider.url)}
-                >
-                  ${provider.url}
-                </button>`
-            )}
+            <div class="provider-choosing-section">
+              <h1>Choose your ETH SSO Provider:</h1>
+              ${this.providers.map(
+                (provider) =>
+                  html`<eth-sso-modal-provider-button
+                    name=${provider.name}
+                    url=${provider.url}
+                    icon=${provider.logo ?? ''}
+                  ></eth-sso-modal-provider-button>`
+              )}
+            </div>
+            <eth-sso-modal-provider-input />
           </div>
         `
       : null;
-  }
-
-  private _handleItemClick(providerUrl: string) {
-    ModalController.selectProvider(providerUrl);
   }
 }
 

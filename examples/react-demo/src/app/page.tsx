@@ -6,13 +6,18 @@ import { SessionKeyProvider } from "@zerodev/sdk";
 import type { ReactElement } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { eth } from "web3";
+import { CHAINSAFE_LOGO_URL } from "./constants";
 
 const SEPOLIA_CHAIN_ID = "0xaa36a7";
 
 createEthSSOModal({
   providers: [
     //TODO: enable passing just url instead of object
-    { url: "http://localhost:3000" },
+    {
+      url: "http://localhost:3000",
+      name: "ChainSafe Provider",
+      logo: CHAINSAFE_LOGO_URL,
+    },
     // { url: "sso.chainsafe.io" },
     // { url: "mpetrunic.eth" },
     // { url: "sso.wallet.connect.com" },
