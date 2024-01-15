@@ -21,10 +21,13 @@ suite('eth-sso-modal', () => {
     assert.shadowDom.equal(
       el,
       `
-    <div class="container">
-        <h1>
-          Choose your ETH SSO Provider:
-        </h1>
+      <div class="container">
+        <div class="provider-choosing-section">
+          <h1>
+            Choose your ETH SSO Provider:
+          </h1>
+        </div>
+        <eth-sso-modal-provider-input></eth-sso-modal-provider-input>
       </div>
       `
     );
@@ -39,12 +42,18 @@ suite('eth-sso-modal', () => {
       el,
       `
       <div class="container">
-        <h1>
-          Choose your ETH SSO Provider:
-        </h1>
-        <button>
-          test.com
-        </button>
+        <div class="provider-choosing-section">
+          <h1>
+            Choose your ETH SSO Provider:
+          </h1>
+          <eth-sso-modal-provider-button
+            icon=""
+            name=""
+            url="test.com"
+          >
+          </eth-sso-modal-provider-button>
+        </div>
+        <eth-sso-modal-provider-input></eth-sso-modal-provider-input>
       </div>
     `
     );
@@ -72,6 +81,6 @@ suite('eth-sso-modal', () => {
       html`<eth-sso-modal></eth-sso-modal>`
     )) as EthSSOModalElement;
     await el.updateComplete;
-    assert.equal(getComputedStyle(el).paddingTop, '16px');
+    assert.equal(getComputedStyle(el).zIndex, '999');
   });
 });
