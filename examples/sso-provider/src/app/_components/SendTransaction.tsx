@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { redirect } from "next/navigation";
-import { Transaction } from "web3-eth-accounts";
+import { privateKeyToPublicKey, Transaction } from "web3-eth-accounts";
 import type { SendTransactionRequestSchema } from "@/sendTransaction/types";
 import { useWeb3Modal } from "@/hooks/useWeb3Modal";
 
@@ -29,12 +29,14 @@ export default function SendTransaction({
         ],
         id: 1,
       })
-      .then((tx) => {
+      .then((txHash) => {
         const url = new URL("sendTransaction", redirect_uri);
-        url.searchParams.set("signer_key", "");
-        url.searchParams.set("smart_account_address", "");
+        url.searchParams.set(
+          "signer_key",
+          privateKeyToPublicKey(privateKey, false),
+        );
         url.searchParams.set("tx_success", String(true));
-        url.searchParams.set("tx_hash", "");
+        url.searchParams.set("tx_hash", txHash as string);
 
         redirect(url.toString());
       });
