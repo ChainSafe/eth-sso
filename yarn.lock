@@ -1432,6 +1432,7 @@ __metadata:
     tailwindcss: ^3.3.0
     typescript: ^5
     web3: ^4.3.0
+    web3-eth-accounts: ^4.1.1
   languageName: unknown
   linkType: soft
 
@@ -15149,6 +15150,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"web3-eth-accounts@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "web3-eth-accounts@npm:4.1.1"
+  dependencies:
+    "@ethereumjs/rlp": ^4.0.1
+    crc-32: ^1.2.2
+    ethereum-cryptography: ^2.0.0
+    web3-errors: ^1.1.4
+    web3-types: ^1.3.1
+    web3-utils: ^4.1.1
+    web3-validator: ^2.0.4
+  checksum: 43c866840849227728c6d2a36ab503c5bfd3486245b393789a58053621552e05b2dbbd8178a2f9b9fc274f742fc6fdd1dd54af2449efea322fe9e67ba3680d51
+  languageName: node
+  linkType: hard
+
 "web3-eth-contract@npm:^4.1.2, web3-eth-contract@npm:^4.1.3":
   version: 4.1.3
   resolution: "web3-eth-contract@npm:4.1.3"
@@ -15319,6 +15335,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"web3-types@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "web3-types@npm:1.4.0"
+  checksum: a365caa753912edbde599ebfbee7983006bd92cea0cc04e55293bef5884faba2d0c109bde88c723d53a530463bd1764d924d8d275e65ed732753b9a3484fa703
+  languageName: node
+  linkType: hard
+
 "web3-utils@npm:^1.3.4":
   version: 1.10.3
   resolution: "web3-utils@npm:1.10.3"
@@ -15359,6 +15382,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"web3-utils@npm:^4.1.1":
+  version: 4.2.0
+  resolution: "web3-utils@npm:4.2.0"
+  dependencies:
+    ethereum-cryptography: ^2.0.0
+    web3-errors: ^1.1.4
+    web3-types: ^1.4.0
+    web3-validator: ^2.0.4
+  checksum: 85cf7a41cc162df471ab5496c200a05302b451c7c7c3bbe0607d5b83618dd87b22519709397a387c8b406881e2889f527b2914d4756ab172953230893e66d277
+  languageName: node
+  linkType: hard
+
 "web3-validator@npm:^2.0.3":
   version: 2.0.3
   resolution: "web3-validator@npm:2.0.3"
@@ -15369,6 +15404,19 @@ __metadata:
     web3-types: ^1.3.0
     zod: ^3.21.4
   checksum: 12bab1b8e037eb9d06b1b64183f0ec0e02c8e57cd129d617da70a151d93c8e494235495735a37a9a6e2885f08abaf43f5986dc424ed666977ba19f0d94f97492
+  languageName: node
+  linkType: hard
+
+"web3-validator@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "web3-validator@npm:2.0.4"
+  dependencies:
+    ethereum-cryptography: ^2.0.0
+    util: ^0.12.5
+    web3-errors: ^1.1.4
+    web3-types: ^1.3.1
+    zod: ^3.21.4
+  checksum: 4bca91ca5b911c26c32bf56c3612ce364ad3c72f50d95cfb754f29481fc911216f248f77613b77872aae9c264ff303a9291358afaf7d8e7cb1c1af440aada71e
   languageName: node
   linkType: hard
 
