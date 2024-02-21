@@ -37,16 +37,18 @@ export default function SendTransaction({
     if (!account) return;
 
     const web3 = new Web3(provider);
-    web3.eth.sendTransaction(tx).on('confirmation', ({ confirmations, receipt }) => {
-      if (confirmations >= BigInt(1)) {
-        const url = new URL("sendTransaction", redirect_uri);
-        url.searchParams.set("signer_key", account.address);
-        url.searchParams.set("tx_success", String(true));
-        url.searchParams.set("tx_hash", receipt.transactionHash);
+    void web3.eth
+      .sendTransaction(tx)
+      .on("confirmation", ({ confirmations, receipt }) => {
+        if (confirmations >= BigInt(1)) {
+          const url = new URL("sendTransaction", redirect_uri);
+          url.searchParams.set("signer_key", account.address);
+          url.searchParams.set("tx_success", String(true));
+          url.searchParams.set("tx_hash", receipt.transactionHash);
 
-        redirect(url.toString());
-      }
-    });
+          redirect(url.toString());
+        }
+      });
   }, [chain_id, transaction, provider, privateKey]);
 
   if (!tx) return;
