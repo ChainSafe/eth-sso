@@ -24,7 +24,7 @@ export default function SendTransaction({
   const tx = useMemo(() => {
     if (!account) return;
     const decodedTransactionData = Transaction.fromSerializedTx(
-      Uint8Array.from(Buffer.from(transaction, "hex")),
+      Buffer.from(transaction.substring(2), "hex"),
     );
 
     return {
@@ -37,16 +37,15 @@ export default function SendTransaction({
     if (!account) return;
 
     const web3 = new Web3(provider);
+    web3.eth.sendTransaction(tx).on('confirmation', ({ confirmations, receipt }) => {
+      if (confirmations >= BigInt(1)) {
+        const url = new URL("sendTransaction", redirect_uri);
+        url.searchParams.set("signer_key", account.address);
+        url.searchParams.set("tx_success", String(true));
+        url.searchParams.set("tx_hash", receipt.transactionHash);
 
-    void web3.eth.sendTransaction(tx).then((d) => {
-      console.log(d);
-
-      const url = new URL("sendTransaction", redirect_uri);
-      url.searchParams.set("signer_key", account.address);
-      url.searchParams.set("tx_success", String(true));
-      url.searchParams.set("tx_hash", "");
-
-      redirect(url.toString());
+        redirect(url.toString());
+      }
     });
   }, [chain_id, transaction, provider, privateKey]);
 
