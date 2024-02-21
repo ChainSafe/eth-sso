@@ -24,7 +24,7 @@ export default function SendTransaction({
   const tx = useMemo(() => {
     if (!account) return;
     const decodedTransactionData = Transaction.fromSerializedTx(
-      Buffer.from(transaction.substring(2), "hex"),
+      Buffer.from(transaction.replace("0x", ""), "hex"),
     );
 
     return {
@@ -43,7 +43,10 @@ export default function SendTransaction({
         if (confirmations >= BigInt(1)) {
           const url = new URL("sendTransaction", redirect_uri);
           url.searchParams.set("signer_key", account.address);
-          url.searchParams.set("tx_success", String(true));
+          url.searchParams.set(
+            "tx_success",
+            String(receipt.status === BigInt(1)),
+          );
           url.searchParams.set("tx_hash", receipt.transactionHash);
 
           redirect(url.toString());
