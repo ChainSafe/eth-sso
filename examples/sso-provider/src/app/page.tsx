@@ -164,8 +164,7 @@ const App = (): ReactElement => {
   }, [web3Auth]);
 
   return (
-    <div className="bg-white flex flex-col items-center justify-center h-screen">
-      <h1 className="title">ETH-SSO</h1>
+    <>
       {isRedirecting ? <b>Connected! Redirecting, please wait...</b> : null}
       <div className="card">
         <p>ETH-SSO</p>
@@ -193,7 +192,7 @@ const App = (): ReactElement => {
           </div>
         ) : null}
       </div>
-    </div>
+    </>
   );
 };
 

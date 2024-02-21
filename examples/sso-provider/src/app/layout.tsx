@@ -17,7 +17,12 @@ export default function RootLayout({
 }): ReactElement {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <div className="bg-white flex flex-col items-center justify-center h-screen">
+          <h1 className="title">ETH-SSO</h1>
+          {children}
+        </div>
+      </body>
     </html>
   );
 }

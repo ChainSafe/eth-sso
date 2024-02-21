@@ -20,7 +20,13 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@/*": ["./src/app/*"],
+      "@/components/*": ["./src/app/_components/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/hooks/*": ["./src/hooks/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
