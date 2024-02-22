@@ -1,7 +1,6 @@
 export interface UserAccount {
   signerKey: string;
   smartAccountAddress: string;
-  serializedSessionKey: string;
 }
 
 export const PopupEvents = {

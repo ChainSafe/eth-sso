@@ -23,10 +23,7 @@ export function useEthSSOModal() {
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
-  async function open(options: {
-    sessionKeyPublic: string;
-    chainId: string;
-  }): Promise<void> {
+  async function open(options: { chainId: string }): Promise<void> {
     if (!ethSSOModalGlobal) {
       throw new Error(
         'Please call "createWeb3Modal" before using "useWeb3Modal" hook',
@@ -42,10 +39,7 @@ export function useEthSSOModal() {
       const top = window.innerHeight / 2 - height / 2;
       const url = `${
         (evt as CustomEvent<EthSSOProvider>).detail.url
-      }?redirect_uri=${redirectUrl}&chain_id=${
-        options.chainId
-      }&session_public_key=${options.sessionKeyPublic}`;
-      // TODO: remove hardcoded dapp
+      }/auth?redirect_uri=${redirectUrl}&chain_id=${options.chainId}`;
 
       const popup = window.open(
         url,
@@ -72,14 +66,10 @@ export function useEthSSOModal() {
           const searchParams = new URL(currentUrl).searchParams;
           const smartAccountAddress = searchParams.get("smart_account_address");
           const signerKey = searchParams.get("signer_key");
-          const serializedSessionKey = searchParams.get(
-            "serialized_session_key",
-          );
-          if (smartAccountAddress && signerKey && serializedSessionKey) {
+          if (smartAccountAddress && signerKey) {
             PopupEvents.setAuthentication({
               smartAccountAddress,
               signerKey,
-              serializedSessionKey,
             });
             clearInterval(interval);
             popup.close();
