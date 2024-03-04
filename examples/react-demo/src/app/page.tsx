@@ -5,6 +5,7 @@ import { Button } from "@mui/material";
 import type { ReactElement } from "react";
 import { useCallback, useEffect, useState } from "react";
 import { CHAINSAFE_LOGO_URL } from "./constants";
+import { AccountDetails } from "@/app/_components/AccountDetails";
 
 const SEPOLIA_CHAIN_ID = "0xaa36a7";
 
@@ -78,15 +79,11 @@ export default function Home(): ReactElement {
           Close Modal
         </Button>
       </div>
-      <div className="accountDetails">
-        {selectedSSOProvider && (
-          <p>Choosen ETH SSO Provider: {selectedSSOProvider}</p>
-        )}
-        {smartAccountAddress && (
-          <p>Smart Contract Account address: {smartAccountAddress}</p>
-        )}
-        {signerKey && <p>Owner key: {signerKey}</p>}
-      </div>
+      <AccountDetails
+        selectedSSOProvider={selectedSSOProvider}
+        smartAccountAddress={smartAccountAddress}
+        signerKey={signerKey}
+      />
     </main>
   );
 }

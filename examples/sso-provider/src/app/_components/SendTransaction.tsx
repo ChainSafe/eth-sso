@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { privateKeyToAccount, Transaction } from "web3-eth-accounts";
 import { Web3 } from "web3";
 import type { SendTransactionRequestSchema } from "@/sendTransaction/types";
-import { useWeb3Modal } from "@/hooks/useWeb3Modal";
+import { useWeb3 } from "@/hooks/useWeb3";
 
 type Props = SendTransactionRequestSchema;
 
@@ -14,7 +14,7 @@ export default function SendTransaction({
   chain_id,
   transaction,
 }: Props): JSX.Element {
-  const [provider, isLoading, privateKey] = useWeb3Modal(chain_id);
+  const [provider, isLoading, privateKey] = useWeb3(chain_id);
 
   const account = useMemo(() => {
     if (!privateKey) return "";
