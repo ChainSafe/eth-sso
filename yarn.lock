@@ -1479,7 +1479,6 @@ __metadata:
     tailwindcss: ^3.3.0
     typescript: ^5
     web3: ^4.2.2
-    web3-eth-accounts: ^4.1.1
   languageName: unknown
   linkType: soft
 
