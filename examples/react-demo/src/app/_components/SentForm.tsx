@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 import { useState } from "react";
 import { Box, Button, TextField } from "@mui/material";
+import { toWei } from "web3-utils";
 
 type OnSubmit = (to: string, amount: number, data?: string) => void;
 
@@ -58,7 +59,7 @@ export function SentForm({ onSubmit }: Props): ReactElement {
         style={{ margin: "0 10px" }}
         variant="outlined"
         onClick={() => {
-          onSubmit(to, Number(amount), data);
+          onSubmit(to, Number(toWei(amount, "ether")), data);
         }}
       >
         Submit

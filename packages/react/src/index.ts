@@ -88,17 +88,20 @@ export function useEthSSOModal() {
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
-  async function transaction(options: {
+  async function sendTransaction(options: {
     chainId: string;
     transaction: string;
   }): Promise<void> {
-    if (!ethSSOModalGlobal) {
+    if (!ethSSOModalGlobal)
       throw new Error(
         'Please call "createWeb3Modal" before using "useWeb3Modal" hook',
       );
-    }
-    ethSSOModalGlobal.open();
     const redirectUrl = ethSSOModalGlobal.options.redirectUrl;
+    if (!redirectUrl)
+      throw new Error(
+        'Provider not selected, please call open from "useWeb3Modal" hook'
+      );
+
     ModalController.events.addEventListener("providerSelected", (evt) => {
       //open popup
       const url = `${
@@ -181,7 +184,7 @@ export function useEthSSOModal() {
   return {
     open,
     close,
-    transaction,
+    sendTransaction,
     onAuthenticationSuccess,
     onProviderSelected,
     onTransactionComplete,

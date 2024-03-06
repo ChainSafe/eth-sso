@@ -29,7 +29,7 @@ createEthSSOModal({
 export default function Home(): ReactElement {
   const {
     open,
-    transaction,
+    sendTransaction,
     onProviderSelected,
     onAuthenticationSuccess,
     onTransactionComplete,
@@ -64,7 +64,7 @@ export default function Home(): ReactElement {
     (to: string, value: number, data?: string) => {
       const transactionData = new Transaction({ to, value, data });
 
-      void transaction({
+      void sendTransaction({
         chainId: SEPOLIA_CHAIN_ID,
         transaction:
           "0x" + Buffer.from(transactionData.serialize()).toString("hex"),
@@ -73,7 +73,7 @@ export default function Home(): ReactElement {
         console.log(tx);
       });
     },
-    [transaction],
+    [sendTransaction],
   );
 
   return (
