@@ -99,7 +99,7 @@ export function useEthSSOModal() {
     const redirectUrl = ethSSOModalGlobal.options.redirectUrl;
     if (!redirectUrl)
       throw new Error(
-        'Provider not selected, please call open from "useWeb3Modal" hook'
+        'Provider not selected, please call open from "useWeb3Modal" hook',
       );
 
     ModalController.events.addEventListener("providerSelected", (evt) => {
