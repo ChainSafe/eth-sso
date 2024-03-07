@@ -1,5 +1,6 @@
 import type { EthSSOProvider } from "@chainsafe/eth-sso-ui";
 import { ModalController } from "@chainsafe/eth-sso-ui";
+import { useState } from "react";
 import { EthSSOModal } from "./modal";
 import type { Transaction, UserAccount } from "./popupEvents";
 import { PopupEvents } from "./popupEvents";
@@ -37,6 +38,8 @@ export function useEthSSOModal() {
     );
   }
 
+  const [provider, setProvider] = useState<EthSSOProvider | null>(null);
+
   // eslint-disable-next-line @typescript-eslint/require-await
   async function open(options: { chainId: string }): Promise<void> {
     if (!ethSSOModalGlobal) {
@@ -54,6 +57,7 @@ export function useEthSSOModal() {
       const popup = windowOpen(url);
 
       if (popup) {
+        setProvider((evt as CustomEvent<EthSSOProvider>).detail);
         waitAndParsePopupAuthenticationResults(popup);
       } else {
         // TODO: handle error
@@ -97,26 +101,20 @@ export function useEthSSOModal() {
         'Please call "createWeb3Modal" before using "useWeb3Modal" hook',
       );
     const redirectUrl = ethSSOModalGlobal.options.redirectUrl;
-    if (!redirectUrl)
+    if (!redirectUrl || !provider)
       throw new Error(
-        'Provider not selected, please call open from "useWeb3Modal" hook',
+        'Provider not selected, please call "open" from "useWeb3Modal" hook',
       );
 
-    ModalController.events.addEventListener("providerSelected", (evt) => {
-      //open popup
-      const url = `${
-        (evt as CustomEvent<EthSSOProvider>).detail.url
-      }/sendTransaction?redirect_uri=${redirectUrl}&chain_id=${
-        options.chainId
-      }&transaction=${options.transaction}`;
-      const popup = windowOpen(url);
+    //open popup
+    const url = `${provider.url}/sendTransaction?redirect_uri=${redirectUrl}&chain_id=${options.chainId}&transaction=${options.transaction}`;
+    const popup = windowOpen(url);
 
-      if (popup) {
-        waitAndParsePopupTransactionResults(popup);
-      } else {
-        // TODO: handle error
-      }
-    });
+    if (popup) {
+      waitAndParsePopupTransactionResults(popup);
+    } else {
+      // TODO: handle error
+    }
   }
 
   function waitAndParsePopupTransactionResults(popup: Window): void {

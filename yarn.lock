@@ -1489,7 +1489,9 @@ __metadata:
   resolution: "@chainsafe/eth-sso-react@workspace:packages/react"
   dependencies:
     "@chainsafe/eth-sso-ui": "workspace:^"
+    "@types/react": ^18
     eslint: ^8.54.0
+    react: ^18.2.0
     typescript: ~5.2
   languageName: unknown
   linkType: soft
@@ -12815,7 +12817,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^18":
+"react@npm:^18, react@npm:^18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
   dependencies:

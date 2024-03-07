@@ -21,8 +21,13 @@
         "@chainsafe/eth-sso-ui": "workspace:^"
     },
     "devDependencies": {
+        "@types/react": "^18",
         "eslint": "^8.54.0",
+        "react": "^18.2.0",
         "typescript": "~5.2"
+    },
+    "peerDependencies": {
+        "react": ">= 18"
     },
     "author": "ChainSafe <info@chainsafe.io>",
     "license": "Apache-2.0",
