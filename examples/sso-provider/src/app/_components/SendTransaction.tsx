@@ -1,7 +1,6 @@
 "use client";
 
 import {useCallback, useEffect, useState} from "react";
-import { redirect } from "next/navigation";
 import { Transaction as AccountTransaction } from "web3-eth-accounts";
 import type { SendTransactionRequestSchema } from "@/sendTransaction/types";
 import { useWeb3 } from "@/hooks/useWeb3";
@@ -16,6 +15,7 @@ export default function SendTransaction({
 }: Props): JSX.Element {
   const [web3, isLoading, { publicKey }] = useWeb3(chain_id);
   const [tx, setTx] = useState<Transaction | null>(null);
+  const [sending, setIsSending] = useState(false);
 
   useEffect(() => {
     if (isLoading) return;
@@ -28,45 +28,32 @@ export default function SendTransaction({
       const decodedTransactionDataJSON = decodedTransactionData.toJSON();
       if (decodedTransactionDataJSON.data.length <= 2) delete decodedTransactionDataJSON.data;
 
-      delete decodedTransactionDataJSON.r;
-      delete decodedTransactionDataJSON.s;
-      delete decodedTransactionDataJSON.v;
-
-      delete decodedTransactionDataJSON.nonce;
-      delete decodedTransactionDataJSON.gasPrice;
-      delete decodedTransactionDataJSON.gasLimit;
-
-      const nonce = await web3.eth.getTransactionCount(publicKey);
-      const gasPrice = await web3.eth.estimateGas(decodedTransactionDataJSON);
-
       setTx({
-        ...decodedTransactionDataJSON,
         from: publicKey,
-        // gasLimit: toHex(gasPrice * BigInt(10)),
-        // nonce: toHex(nonce),
-        // gasPrice: toHex(gasPrice),
+        to: decodedTransactionDataJSON.to,
+        value: decodedTransactionDataJSON.value,
+        data: decodedTransactionDataJSON.data,
       });
     })();
   }, [publicKey, transaction, isLoading]);
 
-  console.log(tx);
-
   const onClick = useCallback(() => {
     void web3.eth
       .sendTransaction(tx)
-      .on("confirmation", ({ confirmations, receipt }) => {
-        if (confirmations >= BigInt(1)) {
-          const url = new URL("sendTransaction", redirect_uri);
-          url.searchParams.set("signer_key", publicKey);
-          url.searchParams.set(
-            "tx_success",
-            String(receipt.status === BigInt(1)),
-          );
-          url.searchParams.set("tx_hash", receipt.transactionHash);
+      .then(({ status, transactionHash, }) => {
+        const url = new URL("sendTransaction", redirect_uri);
+        url.searchParams.set("signer_key", publicKey);
+        url.searchParams.set(
+          "tx_success",
+          String(status === BigInt(1)),
+        );
+        url.searchParams.set("tx_hash", transactionHash as string);
 
-          redirect(url.toString());
+        if (typeof window !== "undefined") {
+          window.location.replace(url.toString());
         }
       });
+    setIsSending(true);
   }, [tx]);
 
   if (!tx) return;
@@ -90,7 +77,7 @@ export default function SendTransaction({
       </table>
       <br />
       <button
-        disabled={isLoading}
+        disabled={isLoading || sending}
         onClick={onClick}
         className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
