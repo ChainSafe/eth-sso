@@ -1,10 +1,10 @@
 "use client";
 
-import {useCallback, useEffect, useState} from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Transaction as AccountTransaction } from "web3-eth-accounts";
+import type { Transaction } from "web3";
 import type { SendTransactionRequestSchema } from "@/sendTransaction/types";
 import { useWeb3 } from "@/hooks/useWeb3";
-import { Transaction } from "web3";
 
 type Props = SendTransactionRequestSchema;
 
@@ -19,40 +19,33 @@ export default function SendTransaction({
 
   useEffect(() => {
     if (isLoading) return;
+    const decodedTransactionData = AccountTransaction.fromSerializedTx(
+      Buffer.from(transaction.replace("0x", ""), "hex"),
+    );
 
-    (async () => {
-      const decodedTransactionData = AccountTransaction.fromSerializedTx(
-        Buffer.from(transaction.replace("0x", ""), "hex"),
-      );
+    const decodedTransactionDataJSON = decodedTransactionData.toJSON();
+    if (decodedTransactionDataJSON.data.length <= 2)
+      delete decodedTransactionDataJSON.data;
 
-      const decodedTransactionDataJSON = decodedTransactionData.toJSON();
-      if (decodedTransactionDataJSON.data.length <= 2) delete decodedTransactionDataJSON.data;
-
-      setTx({
-        from: publicKey,
-        to: decodedTransactionDataJSON.to,
-        value: decodedTransactionDataJSON.value,
-        data: decodedTransactionDataJSON.data,
-      });
-    })();
+    setTx({
+      from: publicKey,
+      to: decodedTransactionDataJSON.to,
+      value: decodedTransactionDataJSON.value,
+      data: decodedTransactionDataJSON.data,
+    });
   }, [publicKey, transaction, isLoading]);
 
   const onClick = useCallback(() => {
-    void web3.eth
-      .sendTransaction(tx)
-      .then(({ status, transactionHash, }) => {
-        const url = new URL("sendTransaction", redirect_uri);
-        url.searchParams.set("signer_key", publicKey);
-        url.searchParams.set(
-          "tx_success",
-          String(status === BigInt(1)),
-        );
-        url.searchParams.set("tx_hash", transactionHash as string);
+    void web3.eth.sendTransaction(tx).then(({ status, transactionHash }) => {
+      const url = new URL("sendTransaction", redirect_uri);
+      url.searchParams.set("signer_key", publicKey);
+      url.searchParams.set("tx_success", String(status === BigInt(1)));
+      url.searchParams.set("tx_hash", transactionHash as string);
 
-        if (typeof window !== "undefined") {
-          window.location.replace(url.toString());
-        }
-      });
+      if (typeof window !== "undefined") {
+        window.location.replace(url.toString());
+      }
+    });
     setIsSending(true);
   }, [tx]);
 

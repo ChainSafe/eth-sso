@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Web3Auth } from "@web3auth/modal";
-import {IProvider, WEB3AUTH_NETWORK} from "@web3auth/base";
+import type { IProvider } from "@web3auth/base";
+import { WEB3AUTH_NETWORK } from "@web3auth/base";
 import { Web3 } from "web3";
 import { WEB3_AUTH_ID } from "@/lib/constants";
 
