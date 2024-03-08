@@ -4,10 +4,11 @@ import { createEthSSOModal, useEthSSOModal } from "@chainsafe/eth-sso-react";
 import { Button } from "@mui/material";
 import type { ReactElement } from "react";
 import { useMemo, useCallback, useEffect, useState } from "react";
-import { Transaction } from "web3-eth-accounts";
+import { Transaction as TransactionBuilder } from "web3-eth-accounts";
 import { CHAINSAFE_LOGO_URL } from "./constants";
 import { AccountDetails } from "@/app/_components/AccountDetails";
 import { SentForm } from "@/app/_components/SentForm";
+import { TransactionDetails } from "@/app/_components/TransactionDetails";
 
 const SEPOLIA_CHAIN_ID = "0xaa36a7";
 
@@ -26,6 +27,12 @@ createEthSSOModal({
   redirectUrl: "http://localhost:3001",
 });
 
+interface Transaction {
+  signerKey: string;
+  txSuccess: boolean;
+  txHash: string;
+}
+
 export default function Home(): ReactElement {
   const {
     open,
@@ -37,6 +44,7 @@ export default function Home(): ReactElement {
   const [selectedSSOProvider, setSSOProvider] = useState("");
   const [smartAccountAddress, setSmartAccountAddress] = useState("");
   const [signerKey, setSignerKey] = useState("");
+  const [tx, setTx] = useState<Transaction | null>(null);
 
   useEffect(() => {
     onProviderSelected((url) => {
@@ -62,16 +70,14 @@ export default function Home(): ReactElement {
 
   const sendTx = useCallback(
     (to: string, value: number, data?: string) => {
-      const transactionData = new Transaction({ to, value, data });
+      const transactionData = new TransactionBuilder({ to, value, data });
 
       void sendTransaction({
         chainId: SEPOLIA_CHAIN_ID,
         transaction:
           "0x" + Buffer.from(transactionData.serialize()).toString("hex"),
       });
-      onTransactionComplete((tx) => {
-        console.log(tx);
-      });
+      onTransactionComplete(setTx);
     },
     [sendTransaction],
   );
@@ -95,6 +101,13 @@ export default function Home(): ReactElement {
           >
             Connect Smart Contract Account
           </Button>
+        ) : tx ? (
+          <TransactionDetails
+            onReset={() => {
+              setTx(null);
+            }}
+            {...tx}
+          />
         ) : (
           <SentForm onSubmit={sendTx} />
         )}
