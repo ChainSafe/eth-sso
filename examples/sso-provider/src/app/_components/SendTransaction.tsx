@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import {useCallback, useEffect, useState} from "react";
 import { redirect } from "next/navigation";
-import { privateKeyToAccount, Transaction } from "web3-eth-accounts";
-import { Web3 } from "web3";
+import { Transaction as AccountTransaction } from "web3-eth-accounts";
 import type { SendTransactionRequestSchema } from "@/sendTransaction/types";
 import { useWeb3 } from "@/hooks/useWeb3";
+import { Transaction } from "web3";
 
 type Props = SendTransactionRequestSchema;
 
@@ -14,35 +14,50 @@ export default function SendTransaction({
   chain_id,
   transaction,
 }: Props): JSX.Element {
-  const [provider, isLoading, privateKey] = useWeb3(chain_id);
+  const [web3, isLoading, { publicKey }] = useWeb3(chain_id);
+  const [tx, setTx] = useState<Transaction | null>(null);
 
-  const account = useMemo(() => {
-    if (!privateKey) return "";
-    return privateKeyToAccount("0x" + privateKey);
-  }, [privateKey]);
+  useEffect(() => {
+    if (isLoading) return;
 
-  const tx = useMemo(() => {
-    if (!account) return;
-    const decodedTransactionData = Transaction.fromSerializedTx(
-      Buffer.from(transaction.replace("0x", ""), "hex"),
-    );
+    (async () => {
+      const decodedTransactionData = AccountTransaction.fromSerializedTx(
+        Buffer.from(transaction.replace("0x", ""), "hex"),
+      );
 
-    return {
-      from: account.address,
-      ...decodedTransactionData.toJSON(),
-    };
-  }, [account, transaction]);
+      const decodedTransactionDataJSON = decodedTransactionData.toJSON();
+      if (decodedTransactionDataJSON.data.length <= 2) delete decodedTransactionDataJSON.data;
+
+      delete decodedTransactionDataJSON.r;
+      delete decodedTransactionDataJSON.s;
+      delete decodedTransactionDataJSON.v;
+
+      delete decodedTransactionDataJSON.nonce;
+      delete decodedTransactionDataJSON.gasPrice;
+      delete decodedTransactionDataJSON.gasLimit;
+
+      const nonce = await web3.eth.getTransactionCount(publicKey);
+      const gasPrice = await web3.eth.estimateGas(decodedTransactionDataJSON);
+
+      setTx({
+        ...decodedTransactionDataJSON,
+        from: publicKey,
+        // gasLimit: toHex(gasPrice * BigInt(10)),
+        // nonce: toHex(nonce),
+        // gasPrice: toHex(gasPrice),
+      });
+    })();
+  }, [publicKey, transaction, isLoading]);
+
+  console.log(tx);
 
   const onClick = useCallback(() => {
-    if (!account) return;
-
-    const web3 = new Web3(provider);
     void web3.eth
       .sendTransaction(tx)
       .on("confirmation", ({ confirmations, receipt }) => {
         if (confirmations >= BigInt(1)) {
           const url = new URL("sendTransaction", redirect_uri);
-          url.searchParams.set("signer_key", account.address);
+          url.searchParams.set("signer_key", publicKey);
           url.searchParams.set(
             "tx_success",
             String(receipt.status === BigInt(1)),
@@ -52,7 +67,7 @@ export default function SendTransaction({
           redirect(url.toString());
         }
       });
-  }, [chain_id, transaction, provider, privateKey]);
+  }, [tx]);
 
   if (!tx) return;
   return (

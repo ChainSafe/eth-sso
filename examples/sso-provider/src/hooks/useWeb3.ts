@@ -1,29 +1,28 @@
 import { useEffect, useState } from "react";
 import { Web3Auth } from "@web3auth/modal";
-import type { IProvider } from "@web3auth/base";
+import {IProvider, WEB3AUTH_NETWORK} from "@web3auth/base";
 import { Web3 } from "web3";
-import type { HexString } from "web3";
 import { WEB3_AUTH_ID } from "@/lib/constants";
 
 type Return =
-  | [Web3, false, HexString, Web3Auth, { provider: IProvider }]
-  | [null, true, null, null, { provider: null }];
+  | [Web3, false, { provider: IProvider; web3Auth: null; publicKey: string }]
+  | [null, true, { provider: null; web3Auth: Web3Auth; publicKey: string }];
 
 export function useWeb3(chainId: string): Return {
   const [web3Auth, setWeb3Auth] = useState<Web3Auth | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [web3, setWeb3] = useState<Web3 | null>(null);
-  const [privateKey, setPrivateKey] = useState<HexString | null>(null);
+  const [publicKey, setPublicKey] = useState("");
 
   useEffect(() => {
     const instance = new Web3Auth({
       clientId: WEB3_AUTH_ID,
-      web3AuthNetwork: "sapphire_mainnet", // Web3Auth Network
+      web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET, // Web3Auth Network
       chainConfig: {
         chainNamespace: "eip155",
         chainId: chainId,
-        rpcTarget: "https://rpc2.sepolia.org",
+        rpcTarget: "https://ethereum-sepolia-rpc.publicnode.com",
       },
     });
 
@@ -31,20 +30,18 @@ export function useWeb3(chainId: string): Return {
       .initModal()
       .then(() => instance.connect())
       .then((web3AuthProvider) => {
-        setProvider(web3AuthProvider);
-        setWeb3(new Web3(web3AuthProvider));
-        void web3AuthProvider
-          .request({
-            method: "eth_private_key", // use "private_key" for other non-evm chains
-          })
-          .then(setPrivateKey)
-          .then(() => {
-            setIsLoading(false);
-          });
+        const web3Instance = new Web3(web3AuthProvider);
+        void web3Instance.eth.getAccounts().then((accounts) => {
+          setProvider(web3AuthProvider);
+          setWeb3(web3Instance);
+          setPublicKey(accounts[0] || "");
+          setIsLoading(false);
+        });
       });
     setWeb3Auth(instance);
   }, [chainId]);
 
-  if (isLoading) return [null, true, null, null, { provider: null }];
-  return [web3, false, privateKey, web3Auth, { provider }];
+  if (isLoading)
+    return [null, true, { provider: null, web3Auth: null, publicKey }];
+  return [web3, false, { provider, web3Auth, publicKey }];
 }
