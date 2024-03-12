@@ -6,8 +6,12 @@ import { Web3 } from "web3";
 import { WEB3_AUTH_ID } from "@/lib/constants";
 
 type Return =
-  | [Web3, false, { provider: IProvider; web3Auth: null; publicKey: string }]
-  | [null, true, { provider: null; web3Auth: Web3Auth; publicKey: string }];
+  | [
+      Web3,
+      false,
+      { provider: IProvider; web3Auth: Web3Auth; publicKey: string },
+    ]
+  | [null, true, { provider: null; web3Auth: null; publicKey: string }];
 
 export function useWeb3(chainId: string): Return {
   const [web3Auth, setWeb3Auth] = useState<Web3Auth | null>(null);
