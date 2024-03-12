@@ -38,7 +38,6 @@ export default function SendTransaction({
   const onClick = useCallback(() => {
     void web3.eth.sendTransaction(tx).then(({ status, transactionHash }) => {
       const url = new URL("sendTransaction", redirect_uri);
-      url.searchParams.set("signer_key", publicKey);
       url.searchParams.set("tx_success", String(status === BigInt(1)));
       url.searchParams.set("tx_hash", transactionHash as string);
 
