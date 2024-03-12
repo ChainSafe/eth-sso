@@ -5,6 +5,12 @@ import { Transaction as AccountTransaction } from "web3-eth-accounts";
 import type { Transaction } from "web3";
 import type { SendTransactionRequestSchema } from "@/sendTransaction/types";
 import { useWeb3 } from "@/hooks/useWeb3";
+import {
+  STORAGE_CONNECTION_TIMESTAMP,
+  STORAGE_CONTRACT_ADDRESS,
+} from "@/lib/constants";
+
+const HOUR = 1000 /* MS */ * 60 /* SEC */ * 60 /* MIN */;
 
 type Props = SendTransactionRequestSchema;
 
@@ -13,6 +19,13 @@ export default function SendTransaction({
   chain_id,
   transaction,
 }: Props): JSX.Element {
+  const contractAddress = localStorage.getItem(STORAGE_CONTRACT_ADDRESS);
+  if (!contractAddress) throw new Error("Wallet not connected");
+
+  const timestamp = localStorage.getItem(STORAGE_CONNECTION_TIMESTAMP);
+  if (!timestamp || Number(timestamp) >= Date.now() + HOUR )
+    throw new Error(`Session expired ${Date.now() + HOUR} `);
+
   const [web3, isLoading, { publicKey }] = useWeb3(chain_id);
   const [tx, setTx] = useState<Transaction | null>(null);
   const [sending, setIsSending] = useState(false);

@@ -92,7 +92,7 @@ export default function Home(): ReactElement {
       >
         {isConnected ? (
           <Button
-            style={{margin: "0 10px"}}
+            style={{ margin: "0 10px" }}
             variant="outlined"
             onClick={openModalClick}
           >
@@ -106,7 +106,7 @@ export default function Home(): ReactElement {
             {...tx}
           />
         ) : (
-          <SentForm onSubmit={sendTx}/>
+          <SentForm onSubmit={sendTx} />
         )}
       </div>
       <AccountDetails
