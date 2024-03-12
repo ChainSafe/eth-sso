@@ -18,7 +18,9 @@
     "next": "14.0.3",
     "react": "^18",
     "react-dom": "^18",
-    "web3": "^4.2.2"
+    "web3": "^4.2.2",
+    "web3-eth-accounts": "^4.1.1",
+    "web3-utils": "^4.2.0"
   },
   "devDependencies": {
     "@types/node": "^20",

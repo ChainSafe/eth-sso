@@ -3,8 +3,12 @@
 import { createEthSSOModal, useEthSSOModal } from "@chainsafe/eth-sso-react";
 import { Button } from "@mui/material";
 import type { ReactElement } from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useMemo, useCallback, useEffect, useState } from "react";
+import { Transaction as TransactionBuilder } from "web3-eth-accounts";
 import { CHAINSAFE_LOGO_URL } from "./constants";
+import { AccountDetails } from "@/app/_components/AccountDetails";
+import { SentForm } from "@/app/_components/SentForm";
+import { TransactionDetails } from "@/app/_components/TransactionDetails";
 
 const SEPOLIA_CHAIN_ID = "0xaa36a7";
 
@@ -23,12 +27,24 @@ createEthSSOModal({
   redirectUrl: "http://localhost:3001",
 });
 
+interface Transaction {
+  signerKey: string;
+  txSuccess: boolean;
+  txHash: string;
+}
+
 export default function Home(): ReactElement {
-  const { open, close, onProviderSelected, onAuthenticationSuccess } =
-    useEthSSOModal();
+  const {
+    open,
+    sendTransaction,
+    onProviderSelected,
+    onAuthenticationSuccess,
+    onTransactionComplete,
+  } = useEthSSOModal();
   const [selectedSSOProvider, setSSOProvider] = useState("");
   const [smartAccountAddress, setSmartAccountAddress] = useState("");
   const [signerKey, setSignerKey] = useState("");
+  const [tx, setTx] = useState<Transaction | null>(null);
 
   useEffect(() => {
     onProviderSelected((url) => {
@@ -47,11 +63,25 @@ export default function Home(): ReactElement {
     });
   }, [open]);
 
-  const closeModalClick = useCallback(() => {
-    void close();
-  }, [close]);
+  const isConnected = useMemo(
+    () => !selectedSSOProvider || !smartAccountAddress || !signerKey,
+    [selectedSSOProvider, smartAccountAddress, signerKey],
+  );
 
-  //TODO: add button for sending transaction
+  const sendTx = useCallback(
+    (to: string, value: number, data?: string) => {
+      const transactionData = new TransactionBuilder({ to, value, data });
+
+      void sendTransaction({
+        chainId: SEPOLIA_CHAIN_ID,
+        transaction:
+          "0x" + Buffer.from(transactionData.serialize()).toString("hex"),
+      });
+      onTransactionComplete(setTx);
+    },
+    [sendTransaction],
+  );
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <h1>ERC4337 + ERC7555 + Session Keys Demo </h1>
@@ -63,30 +93,30 @@ export default function Home(): ReactElement {
           justifyContent: "center",
         }}
       >
-        <Button
-          style={{ margin: "0 10px" }}
-          variant="outlined"
-          onClick={openModalClick}
-        >
-          Connect Smart Contract Account
-        </Button>
-        <Button
-          style={{ margin: "0 10px" }}
-          variant="outlined"
-          onClick={closeModalClick}
-        >
-          Close Modal
-        </Button>
-      </div>
-      <div className="accountDetails">
-        {selectedSSOProvider && (
-          <p>Choosen ETH SSO Provider: {selectedSSOProvider}</p>
+        {isConnected ? (
+          <Button
+            style={{ margin: "0 10px" }}
+            variant="outlined"
+            onClick={openModalClick}
+          >
+            Connect Smart Contract Account
+          </Button>
+        ) : tx ? (
+          <TransactionDetails
+            onReset={() => {
+              setTx(null);
+            }}
+            {...tx}
+          />
+        ) : (
+          <SentForm onSubmit={sendTx} />
         )}
-        {smartAccountAddress && (
-          <p>Smart Contract Account address: {smartAccountAddress}</p>
-        )}
-        {signerKey && <p>Owner key: {signerKey}</p>}
       </div>
+      <AccountDetails
+        selectedSSOProvider={selectedSSOProvider}
+        smartAccountAddress={smartAccountAddress}
+        signerKey={signerKey}
+      />
     </main>
   );
 }
