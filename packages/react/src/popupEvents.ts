@@ -1,10 +1,8 @@
 export interface UserAccount {
-  signerKey: string;
-  smartAccountAddress: string;
+  address: string;
 }
 
 export interface Transaction {
-  signerKey: string;
   txSuccess: boolean;
   txHash: string;
 }

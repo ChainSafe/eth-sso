@@ -3,16 +3,13 @@ import type { ReactElement } from "react";
 interface Props {
   selectedSSOProvider: string;
   smartAccountAddress: string;
-  signerKey: string;
 }
 
 export function AccountDetails({
   selectedSSOProvider,
   smartAccountAddress,
-  signerKey,
 }: Props): ReactElement {
-  if (!selectedSSOProvider || !smartAccountAddress || !signerKey)
-    return <div />;
+  if (!selectedSSOProvider || !smartAccountAddress) return <div />;
 
   return (
     <div className="accountDetails">
@@ -22,7 +19,6 @@ export function AccountDetails({
       {smartAccountAddress && (
         <p>Smart Contract Account address: {smartAccountAddress}</p>
       )}
-      {signerKey && <p>Owner key: {signerKey}</p>}
     </div>
   );
 }

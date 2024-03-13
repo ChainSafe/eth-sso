@@ -72,12 +72,10 @@ export function useEthSSOModal() {
         const currentUrl = popup.location.href;
         if (currentUrl && currentUrl !== initialUrl) {
           const searchParams = new URL(currentUrl).searchParams;
-          const smartAccountAddress = searchParams.get("smart_account_address");
-          const signerKey = searchParams.get("signer_key");
-          if (smartAccountAddress && signerKey) {
+          const address = searchParams.get("address");
+          if (address) {
             PopupEvents.setAuthentication({
-              smartAccountAddress,
-              signerKey,
+              address,
             });
             clearInterval(interval);
             popup.close();
@@ -126,12 +124,10 @@ export function useEthSSOModal() {
           const searchParams = new URL(currentUrl).searchParams;
           const txHash = searchParams.get("tx_hash");
           const txSuccess = searchParams.get("tx_success");
-          const signerKey = searchParams.get("signer_key");
-          if (txHash && txSuccess && signerKey) {
+          if (txHash && txSuccess) {
             PopupEvents.setTransaction({
               txHash,
               txSuccess: Boolean(txSuccess),
-              signerKey,
             });
             clearInterval(interval);
             popup.close();

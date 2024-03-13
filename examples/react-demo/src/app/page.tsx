@@ -28,7 +28,6 @@ createEthSSOModal({
 });
 
 interface Transaction {
-  signerKey: string;
   txSuccess: boolean;
   txHash: string;
 }
@@ -43,7 +42,6 @@ export default function Home(): ReactElement {
   } = useEthSSOModal();
   const [selectedSSOProvider, setSSOProvider] = useState("");
   const [smartAccountAddress, setSmartAccountAddress] = useState("");
-  const [signerKey, setSignerKey] = useState("");
   const [tx, setTx] = useState<Transaction | null>(null);
 
   useEffect(() => {
@@ -51,8 +49,7 @@ export default function Home(): ReactElement {
       setSSOProvider(url);
     });
     onAuthenticationSuccess((account) => {
-      setSmartAccountAddress(account.smartAccountAddress);
-      setSignerKey(account.signerKey);
+      setSmartAccountAddress(account.address);
     });
   }, []);
 
@@ -64,12 +61,12 @@ export default function Home(): ReactElement {
   }, [open]);
 
   const isConnected = useMemo(
-    () => !selectedSSOProvider || !smartAccountAddress || !signerKey,
-    [selectedSSOProvider, smartAccountAddress, signerKey],
+    () => !selectedSSOProvider || !smartAccountAddress,
+    [selectedSSOProvider, smartAccountAddress],
   );
 
   const sendTx = useCallback(
-    (to: string, value: number, data?: string) => {
+    (to: string, value: bigint, data?: string) => {
       const transactionData = new TransactionBuilder({ to, value, data });
 
       void sendTransaction({
@@ -84,7 +81,7 @@ export default function Home(): ReactElement {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1>ERC4337 + ERC7555 + Session Keys Demo </h1>
+      <h1>ERC4337 + ERC7555</h1>
       <div
         style={{
           display: "flex",
@@ -115,7 +112,6 @@ export default function Home(): ReactElement {
       <AccountDetails
         selectedSSOProvider={selectedSSOProvider}
         smartAccountAddress={smartAccountAddress}
-        signerKey={signerKey}
       />
     </main>
   );

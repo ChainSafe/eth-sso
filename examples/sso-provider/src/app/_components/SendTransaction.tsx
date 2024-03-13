@@ -3,8 +3,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { Transaction as AccountTransaction } from "web3-eth-accounts";
 import type { Transaction } from "web3";
+import { ECDSAProvider, getRPCProviderOwner } from "@zerodev/sdk";
 import type { SendTransactionRequestSchema } from "@/sendTransaction/types";
 import { useWeb3 } from "@/hooks/useWeb3";
+import {
+  STORAGE_CONNECTION_TIMESTAMP,
+  STORAGE_CONTRACT_ADDRESS,
+} from "@/lib/constants";
+
+const HOUR = 1000 /* MS */ * 60 /* SEC */ * 60; /* MIN */
 
 type Props = SendTransactionRequestSchema;
 
@@ -13,7 +20,14 @@ export default function SendTransaction({
   chain_id,
   transaction,
 }: Props): JSX.Element {
-  const [web3, isLoading, { publicKey }] = useWeb3(chain_id);
+  const contractAddress = localStorage.getItem(STORAGE_CONTRACT_ADDRESS);
+  if (!contractAddress) throw new Error("Wallet not connected");
+
+  const timestamp = localStorage.getItem(STORAGE_CONNECTION_TIMESTAMP);
+  if (!timestamp || Number(timestamp) >= Date.now() + HOUR)
+    throw new Error(`Session expired`);
+
+  const [web3, isLoading, { provider }] = useWeb3(chain_id);
   const [tx, setTx] = useState<Transaction | null>(null);
   const [sending, setIsSending] = useState(false);
 
@@ -28,26 +42,44 @@ export default function SendTransaction({
       delete decodedTransactionDataJSON.data;
 
     setTx({
-      from: publicKey,
+      from: contractAddress,
       to: decodedTransactionDataJSON.to,
       value: decodedTransactionDataJSON.value,
       data: decodedTransactionDataJSON.data,
     });
-  }, [publicKey, transaction, isLoading]);
+  }, [transaction, isLoading]);
 
   const onClick = useCallback(() => {
-    void web3.eth.sendTransaction(tx).then(({ status, transactionHash }) => {
+    setIsSending(true);
+
+    void (async () => {
+      const ecdsaProvider = await ECDSAProvider.init({
+        projectId: process.env.NEXT_PUBLIC_ZERODEV_PROJECT_ID,
+        owner: getRPCProviderOwner(provider),
+      });
+      const actualContractAddress = await ecdsaProvider.getAddress();
+
+      if (contractAddress !== actualContractAddress)
+        throw new Error("Account miss match");
+
+      const txHash = await ecdsaProvider.sendTransaction({
+        to: tx.to as `0x${string}`,
+        from: contractAddress,
+        value: tx.value as `0x${string}`,
+        data: tx.data as `0x${string}`,
+      });
+
+      const { status, transactionHash } =
+        await web3.eth.getTransactionReceipt(txHash);
       const url = new URL("sendTransaction", redirect_uri);
-      url.searchParams.set("signer_key", publicKey);
       url.searchParams.set("tx_success", String(status === BigInt(1)));
       url.searchParams.set("tx_hash", transactionHash as string);
 
       if (typeof window !== "undefined") {
         window.location.replace(url.toString());
       }
-    });
-    setIsSending(true);
-  }, [tx]);
+    })();
+  }, [tx, provider]);
 
   if (!tx) return;
   return (
