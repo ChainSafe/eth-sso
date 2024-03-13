@@ -66,7 +66,7 @@ export default function Home(): ReactElement {
   );
 
   const sendTx = useCallback(
-    (to: string, value: number, data?: string) => {
+    (to: string, value: bigint, data?: string) => {
       const transactionData = new TransactionBuilder({ to, value, data });
 
       void sendTransaction({

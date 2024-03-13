@@ -9,8 +9,7 @@ export function AccountDetails({
   selectedSSOProvider,
   smartAccountAddress,
 }: Props): ReactElement {
-  if (!selectedSSOProvider || !smartAccountAddress)
-    return <div />;
+  if (!selectedSSOProvider || !smartAccountAddress) return <div />;
 
   return (
     <div className="accountDetails">
