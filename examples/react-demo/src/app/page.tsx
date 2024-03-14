@@ -3,17 +3,18 @@
 import { createEthSSOModal, useEthSSOModal } from "@chainsafe/eth-sso-react";
 import { Box, Button, Tab, Tabs } from "@mui/material";
 import type { ReactElement } from "react";
-import { useMemo, useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useCallback, useState } from "react";
 import { Transaction as TransactionBuilder } from "web3-eth-accounts";
 import type { AbiFunctionFragment } from "web3";
-import { eth } from "web3";
+import { Web3, eth } from "web3";
 import { CHAINSAFE_LOGO_URL, CONTRACT_ADDRESS } from "./constants";
 import { AccountDetails } from "@/app/_components/AccountDetails";
 import { SentForm } from "@/app/_components/SentForm";
 import { TransactionDetails } from "@/app/_components/TransactionDetails";
 import { CustomTabPanel } from "@/app/_components/CustomTabPanel";
 import { SmartContractInteraction } from "@/app/_components/SmartContractInteraction";
-import { contractAbiSendMessage } from "@/app/contract.abi";
+import { contractAbi, contractAbiSendMessage } from "@/app/contract.abi";
+import type { Message } from "@/app/types";
 
 const SEPOLIA_CHAIN_ID = "0xaa36a7";
 
@@ -49,6 +50,7 @@ export default function Home(): ReactElement {
   const [smartAccountAddress, setSmartAccountAddress] = useState("");
   const [tx, setTx] = useState<Transaction | null>(null);
   const [tab, setTab] = useState(0);
+  const [latestMessage, setLatestNessage] = useState<Message | undefined>();
 
   useEffect(() => {
     onProviderSelected((url) => {
@@ -58,6 +60,26 @@ export default function Home(): ReactElement {
       setSmartAccountAddress(smartAccountAddress);
     });
   }, []);
+
+  useEffect(() => {
+    if (!smartAccountAddress) return;
+
+    const web3 = new Web3("https://ethereum-sepolia-rpc.publicnode.com");
+    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
+
+    const interval = setInterval(() => {
+      void contract.methods
+        .getLatestMessage()
+        .call()
+        .then((response) => {
+          setLatestNessage({ address: response[0], message: response[1] });
+        });
+    }, 6000 /* Half Block time on Sepolia */);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [smartAccountAddress]);
 
   const openModalClick = useCallback(() => {
     //open eth sso modal and pass sessions key and chain id
@@ -151,7 +173,10 @@ export default function Home(): ReactElement {
               <SentForm onSubmit={sendTx} />
             </CustomTabPanel>
             <CustomTabPanel value={tab} index={1}>
-              <SmartContractInteraction onSubmit={sendMessage} />
+              <SmartContractInteraction
+                onSubmit={sendMessage}
+                latestMessage={latestMessage}
+              />
             </CustomTabPanel>
           </>
         )}

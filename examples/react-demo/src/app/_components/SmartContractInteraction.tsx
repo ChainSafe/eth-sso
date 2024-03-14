@@ -30,8 +30,13 @@ export function SmartContractInteraction({
       {latestMessage && (
         <>
           <p>Latest Message</p>
-          <p>Sender: {latestMessage.address}</p>
-          <p>Message: {latestMessage.message}</p>
+          <p>
+            Sender: <b>{latestMessage.address}</b>
+          </p>
+          <p>
+            Message: <b>{latestMessage.message}</b>
+          </p>
+          <br />
         </>
       )}
 
