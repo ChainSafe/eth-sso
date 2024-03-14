@@ -27,7 +27,7 @@ export default function SendTransaction({
   if (!timestamp || Number(timestamp) >= Date.now() + HOUR)
     throw new Error(`Session expired`);
 
-  const [web3, isLoading, { provider }] = useWeb3(chain_id);
+  const [, isLoading, { provider }] = useWeb3(chain_id);
   const [tx, setTx] = useState<Transaction | null>(null);
   const [sending, setIsSending] = useState(false);
 
@@ -69,11 +69,9 @@ export default function SendTransaction({
         data: tx.data as `0x${string}`,
       });
 
-      const { status, transactionHash } =
-        await web3.eth.getTransactionReceipt(txHash);
       const url = new URL("sendTransaction", redirect_uri);
-      url.searchParams.set("tx_success", String(status === BigInt(1)));
-      url.searchParams.set("tx_hash", transactionHash as string);
+      url.searchParams.set("smart_account_address", contractAddress);
+      url.searchParams.set("tx_hash", txHash);
 
       if (typeof window !== "undefined") {
         window.location.replace(url.toString());
