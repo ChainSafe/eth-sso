@@ -7,7 +7,11 @@ import { useEffect, useMemo, useCallback, useState } from "react";
 import { Transaction as TransactionBuilder } from "web3-eth-accounts";
 import type { AbiFunctionFragment } from "web3";
 import { Web3, eth } from "web3";
-import { CHAINSAFE_LOGO_URL, CONTRACT_ADDRESS } from "./constants";
+import {
+  CHAINSAFE_LOGO_URL,
+  CONTRACT_ADDRESS,
+  RPC_PROVIDER,
+} from "./constants";
 import { AccountDetails } from "@/app/_components/AccountDetails";
 import { SentForm } from "@/app/_components/SentForm";
 import { TransactionDetails } from "@/app/_components/TransactionDetails";
@@ -64,7 +68,7 @@ export default function Home(): ReactElement {
   useEffect(() => {
     if (!smartAccountAddress) return;
 
-    const web3 = new Web3("https://ethereum-sepolia-rpc.publicnode.com");
+    const web3 = new Web3(RPC_PROVIDER);
     const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
 
     const interval = setInterval(() => {

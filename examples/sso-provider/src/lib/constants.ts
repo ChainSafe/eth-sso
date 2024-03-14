@@ -3,3 +3,5 @@ export const WEB3_AUTH_ID =
 
 export const STORAGE_CONTRACT_ADDRESS = "ContractAddress_v1";
 export const STORAGE_CONNECTION_TIMESTAMP = "ConnectionTimestamp_v1";
+
+export const RPC_PROVIDER = "https://ethereum-sepolia-rpc.publicnode.com";
