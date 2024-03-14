@@ -38,7 +38,7 @@ export function useWeb3(chainId: string): Return {
         const web3Instance = new Web3(web3AuthProvider);
         void web3Instance.eth.getAccounts().then((accounts) => {
           setProvider(web3AuthProvider);
-          setWeb3(web3Instance);
+          setWeb3(web3Instance as unknown as Web3);
           setPublicKey(accounts[0] || "");
           setIsLoading(false);
         });

@@ -1,9 +1,9 @@
 export interface UserAccount {
-  address: string;
+  smartAccountAddress: string;
 }
 
 export interface Transaction {
-  txSuccess: boolean;
+  smartAccountAddress: string;
   txHash: string;
 }
 

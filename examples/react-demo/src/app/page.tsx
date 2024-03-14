@@ -28,7 +28,7 @@ createEthSSOModal({
 });
 
 interface Transaction {
-  txSuccess: boolean;
+  smartAccountAddress: string;
   txHash: string;
 }
 
@@ -48,8 +48,8 @@ export default function Home(): ReactElement {
     onProviderSelected((url) => {
       setSSOProvider(url);
     });
-    onAuthenticationSuccess((account) => {
-      setSmartAccountAddress(account.address);
+    onAuthenticationSuccess(({ smartAccountAddress }) => {
+      setSmartAccountAddress(smartAccountAddress);
     });
   }, []);
 
