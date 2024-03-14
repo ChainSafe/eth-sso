@@ -5,11 +5,15 @@ import { Box, Button, Tab, Tabs } from "@mui/material";
 import type { ReactElement } from "react";
 import { useMemo, useCallback, useEffect, useState } from "react";
 import { Transaction as TransactionBuilder } from "web3-eth-accounts";
-import { CHAINSAFE_LOGO_URL } from "./constants";
+import type { AbiFunctionFragment } from "web3";
+import { eth } from "web3";
+import { CHAINSAFE_LOGO_URL, CONTRACT_ADDRESS } from "./constants";
 import { AccountDetails } from "@/app/_components/AccountDetails";
 import { SentForm } from "@/app/_components/SentForm";
 import { TransactionDetails } from "@/app/_components/TransactionDetails";
 import { CustomTabPanel } from "@/app/_components/CustomTabPanel";
+import { SmartContractInteraction } from "@/app/_components/SmartContractInteraction";
+import { contractAbiSendMessage } from "@/app/contract.abi";
 
 const SEPOLIA_CHAIN_ID = "0xaa36a7";
 
@@ -81,6 +85,28 @@ export default function Home(): ReactElement {
     [sendTransaction],
   );
 
+  const sendMessage = useCallback(
+    (message: string) => {
+      const data = eth.abi.encodeFunctionCall(
+        contractAbiSendMessage as AbiFunctionFragment,
+        [message],
+      );
+
+      const transactionData = new TransactionBuilder({
+        to: CONTRACT_ADDRESS,
+        data,
+      });
+
+      void sendTransaction({
+        chainId: SEPOLIA_CHAIN_ID,
+        transaction:
+          "0x" + Buffer.from(transactionData.serialize()).toString("hex"),
+      });
+      onTransactionComplete(setTx);
+    },
+    [sendTransaction],
+  );
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <h1>ERC4337 + ERC7555</h1>
@@ -88,8 +114,8 @@ export default function Home(): ReactElement {
         style={{
           display: "flex",
           height: "50px",
-          width: "100%",
           justifyContent: "center",
+          flexDirection: "column",
         }}
       >
         {isConnected ? (
@@ -100,6 +126,13 @@ export default function Home(): ReactElement {
           >
             Connect Smart Contract Account
           </Button>
+        ) : tx ? (
+          <TransactionDetails
+            onReset={() => {
+              setTx(null);
+            }}
+            {...tx}
+          />
         ) : (
           <>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -115,19 +148,10 @@ export default function Home(): ReactElement {
               </Tabs>
             </Box>
             <CustomTabPanel value={tab} index={0}>
-              {tx ? (
-                <TransactionDetails
-                  onReset={() => {
-                    setTx(null);
-                  }}
-                  {...tx}
-                />
-              ) : (
-                <SentForm onSubmit={sendTx} />
-              )}
+              <SentForm onSubmit={sendTx} />
             </CustomTabPanel>
             <CustomTabPanel value={tab} index={1}>
-              AAAA
+              <SmartContractInteraction onSubmit={sendMessage} />
             </CustomTabPanel>
           </>
         )}

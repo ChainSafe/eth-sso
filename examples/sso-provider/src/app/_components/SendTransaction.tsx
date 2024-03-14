@@ -93,7 +93,9 @@ export default function SendTransaction({
           {Object.keys(tx).map((key) => (
             <tr key={key}>
               <td className="border border-slate-300">{key}</td>
-              <td className="border border-slate-300">{tx[key]}</td>
+              <td className="border border-slate-300">
+                {(tx[key] as string).substring(0, 49)}
+              </td>
             </tr>
           ))}
         </tbody>
