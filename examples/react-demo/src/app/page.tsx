@@ -1,7 +1,7 @@
 "use client";
 
 import { createEthSSOModal, useEthSSOModal } from "@chainsafe/eth-sso-react";
-import { Button } from "@mui/material";
+import { Box, Button, Tab, Tabs } from "@mui/material";
 import type { ReactElement } from "react";
 import { useMemo, useCallback, useEffect, useState } from "react";
 import { Transaction as TransactionBuilder } from "web3-eth-accounts";
@@ -9,6 +9,7 @@ import { CHAINSAFE_LOGO_URL } from "./constants";
 import { AccountDetails } from "@/app/_components/AccountDetails";
 import { SentForm } from "@/app/_components/SentForm";
 import { TransactionDetails } from "@/app/_components/TransactionDetails";
+import { CustomTabPanel } from "@/app/_components/CustomTabPanel";
 
 const SEPOLIA_CHAIN_ID = "0xaa36a7";
 
@@ -43,6 +44,7 @@ export default function Home(): ReactElement {
   const [selectedSSOProvider, setSSOProvider] = useState("");
   const [smartAccountAddress, setSmartAccountAddress] = useState("");
   const [tx, setTx] = useState<Transaction | null>(null);
+  const [tab, setTab] = useState(0);
 
   useEffect(() => {
     onProviderSelected((url) => {
@@ -98,15 +100,36 @@ export default function Home(): ReactElement {
           >
             Connect Smart Contract Account
           </Button>
-        ) : tx ? (
-          <TransactionDetails
-            onReset={() => {
-              setTx(null);
-            }}
-            {...tx}
-          />
         ) : (
-          <SentForm onSubmit={sendTx} />
+          <>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs
+                value={tab}
+                onChange={(_event, newTab): void => {
+                  setTab(newTab as number);
+                }}
+                aria-label="basic tabs example"
+              >
+                <Tab label="Transaction" />
+                <Tab label="Smart Contract Interaction" />
+              </Tabs>
+            </Box>
+            <CustomTabPanel value={tab} index={0}>
+              {tx ? (
+                <TransactionDetails
+                  onReset={() => {
+                    setTx(null);
+                  }}
+                  {...tx}
+                />
+              ) : (
+                <SentForm onSubmit={sendTx} />
+              )}
+            </CustomTabPanel>
+            <CustomTabPanel value={tab} index={1}>
+              AAAA
+            </CustomTabPanel>
+          </>
         )}
       </div>
       <AccountDetails
