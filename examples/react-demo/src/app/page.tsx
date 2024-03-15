@@ -1,14 +1,25 @@
 "use client";
 
 import { createEthSSOModal, useEthSSOModal } from "@chainsafe/eth-sso-react";
-import { Button } from "@mui/material";
+import { Box, Button, Tab, Tabs } from "@mui/material";
 import type { ReactElement } from "react";
-import { useMemo, useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useCallback, useState } from "react";
 import { Transaction as TransactionBuilder } from "web3-eth-accounts";
-import { CHAINSAFE_LOGO_URL } from "./constants";
+import type { AbiFunctionFragment } from "web3";
+import { Web3, eth } from "web3";
+import { toHex } from "web3-utils";
+import {
+  CHAINSAFE_LOGO_URL,
+  CONTRACT_ADDRESS,
+  RPC_PROVIDER,
+} from "./constants";
 import { AccountDetails } from "@/app/_components/AccountDetails";
 import { SentForm } from "@/app/_components/SentForm";
 import { TransactionDetails } from "@/app/_components/TransactionDetails";
+import { CustomTabPanel } from "@/app/_components/CustomTabPanel";
+import { SmartContractInteraction } from "@/app/_components/SmartContractInteraction";
+import { contractAbi, contractAbiSendMessage } from "@/app/contract.abi";
+import type { Message } from "@/app/types";
 
 const SEPOLIA_CHAIN_ID = "0xaa36a7";
 
@@ -43,6 +54,8 @@ export default function Home(): ReactElement {
   const [selectedSSOProvider, setSSOProvider] = useState("");
   const [smartAccountAddress, setSmartAccountAddress] = useState("");
   const [tx, setTx] = useState<Transaction | null>(null);
+  const [tab, setTab] = useState(0);
+  const [latestMessage, setLatestNessage] = useState<Message | undefined>();
 
   useEffect(() => {
     onProviderSelected((url) => {
@@ -52,6 +65,26 @@ export default function Home(): ReactElement {
       setSmartAccountAddress(smartAccountAddress);
     });
   }, []);
+
+  useEffect(() => {
+    if (!smartAccountAddress) return;
+
+    const web3 = new Web3(RPC_PROVIDER);
+    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
+
+    const interval = setInterval(() => {
+      void contract.methods
+        .getLatestMessage()
+        .call()
+        .then((response) => {
+          setLatestNessage({ address: response[0], message: response[1] });
+        });
+    }, 6000 /* Half Block time on Sepolia */);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [smartAccountAddress]);
 
   const openModalClick = useCallback(() => {
     //open eth sso modal and pass sessions key and chain id
@@ -71,8 +104,28 @@ export default function Home(): ReactElement {
 
       void sendTransaction({
         chainId: SEPOLIA_CHAIN_ID,
-        transaction:
-          "0x" + Buffer.from(transactionData.serialize()).toString("hex"),
+        transaction: toHex(transactionData.serialize()),
+      });
+      onTransactionComplete(setTx);
+    },
+    [sendTransaction],
+  );
+
+  const sendMessage = useCallback(
+    (message: string) => {
+      const data = eth.abi.encodeFunctionCall(
+        contractAbiSendMessage as AbiFunctionFragment,
+        [message],
+      );
+
+      const transactionData = new TransactionBuilder({
+        to: CONTRACT_ADDRESS,
+        data,
+      });
+
+      void sendTransaction({
+        chainId: SEPOLIA_CHAIN_ID,
+        transaction: toHex(transactionData.serialize()),
       });
       onTransactionComplete(setTx);
     },
@@ -86,8 +139,8 @@ export default function Home(): ReactElement {
         style={{
           display: "flex",
           height: "50px",
-          width: "100%",
           justifyContent: "center",
+          flexDirection: "column",
         }}
       >
         {isConnected ? (
@@ -106,7 +159,29 @@ export default function Home(): ReactElement {
             {...tx}
           />
         ) : (
-          <SentForm onSubmit={sendTx} />
+          <>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs
+                value={tab}
+                onChange={(_event, newTab): void => {
+                  setTab(newTab as number);
+                }}
+                aria-label="basic tabs example"
+              >
+                <Tab label="Transaction" />
+                <Tab label="Smart Contract Interaction" />
+              </Tabs>
+            </Box>
+            <CustomTabPanel value={tab} index={0}>
+              <SentForm onSubmit={sendTx} />
+            </CustomTabPanel>
+            <CustomTabPanel value={tab} index={1}>
+              <SmartContractInteraction
+                onSubmit={sendMessage}
+                latestMessage={latestMessage}
+              />
+            </CustomTabPanel>
+          </>
         )}
       </div>
       <AccountDetails

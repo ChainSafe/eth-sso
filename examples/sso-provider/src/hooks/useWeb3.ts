@@ -3,7 +3,7 @@ import { Web3Auth } from "@web3auth/modal";
 import type { IProvider } from "@web3auth/base";
 import { WEB3AUTH_NETWORK } from "@web3auth/base";
 import { Web3 } from "web3";
-import { WEB3_AUTH_ID } from "@/lib/constants";
+import { RPC_PROVIDER, WEB3_AUTH_ID } from "@/lib/constants";
 
 type Return =
   | [
@@ -27,7 +27,7 @@ export function useWeb3(chainId: string): Return {
       chainConfig: {
         chainNamespace: "eip155",
         chainId: chainId,
-        rpcTarget: "https://ethereum-sepolia-rpc.publicnode.com",
+        rpcTarget: RPC_PROVIDER,
       },
     });
 
