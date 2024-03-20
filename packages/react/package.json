@@ -18,7 +18,8 @@
         "test:unit": "exit 0"
     },
     "dependencies": {
-        "@chainsafe/eth-sso-ui": "workspace:^"
+        "@chainsafe/eth-sso-ui": "workspace:^",
+        "caip": "^1.1.1"
     },
     "devDependencies": {
         "@types/react": "^18",

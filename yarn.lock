@@ -1424,6 +1424,7 @@ __metadata:
     "@zerodev/sdk": ^4.3.4
     "@zerodev/web3auth": ^4.3.5
     autoprefixer: ^10.0.1
+    caip: ^1.1.1
     eslint: ^8
     eslint-config-next: 14.0.1
     next: 14.0.1
@@ -1491,6 +1492,7 @@ __metadata:
   dependencies:
     "@chainsafe/eth-sso-ui": "workspace:^"
     "@types/react": ^18
+    caip: ^1.1.1
     eslint: ^8.54.0
     react: ^18.2.0
     typescript: ~5.2
@@ -6826,6 +6828,13 @@ __metadata:
     mime-types: ^2.1.18
     ylru: ^1.2.0
   checksum: 59b50e29e64a24bb52a16e5d35b69ad27ef14313701acc5e462b0aeebf2f09ff87fb6538eb0c0f0de4de05c8a1eecaef47f455f5b4928079e68f607f816a0843
+  languageName: node
+  linkType: hard
+
+"caip@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "caip@npm:1.1.1"
+  checksum: f2ddd27b83713de64a695c1e23278a302d3897546dbb9d6be05b3c0cc51ed058d73fd76ea38cc21b51cd05a0c4bd862b3ec156a4b91120c5b3e0ba38bfe0dd7d
   languageName: node
   linkType: hard
 
