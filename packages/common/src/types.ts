@@ -3,3 +3,12 @@ export interface EthSSOProvider {
   url: string;
   name: string;
 }
+
+export interface UserAccount {
+  smartAccountAddress: string;
+}
+
+export interface Transaction {
+  smartAccountAddress: string;
+  txHash: string;
+}

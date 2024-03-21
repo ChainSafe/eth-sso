@@ -2,8 +2,14 @@ import type { EthSSOProvider } from "@chainsafe/eth-sso-ui";
 import { ModalController } from "@chainsafe/eth-sso-ui";
 import { useState } from "react";
 import { AccountId } from "caip";
+import type {
+  Transaction,
+  UserAccount,
+  UserAccountEvent,
+  ProviderSelectedEvent,
+  TransactionEvent,
+} from "@chainsafe/eth-sso-common";
 import { EthSSOModal } from "./modal";
-import type { Transaction, UserAccount } from "./popupEvents";
 import { PopupEvents } from "./popupEvents";
 
 let ethSSOModalGlobal: EthSSOModal | undefined = undefined;
@@ -165,7 +171,7 @@ export function useEthSSOModal() {
     callback: (account: UserAccount) => void,
   ): void {
     PopupEvents.events.addEventListener("authenticationSuccess", (evt) => {
-      void callback((evt as CustomEvent<UserAccount>).detail);
+      void callback((evt as UserAccountEvent).detail);
     });
   }
 
@@ -173,7 +179,7 @@ export function useEthSSOModal() {
     callback: (providerUrl: string) => Promise<void> | void,
   ): void {
     ModalController.events.addEventListener("providerSelected", (evt) => {
-      void callback((evt as CustomEvent<{ url: string }>).detail.url);
+      void callback((evt as ProviderSelectedEvent).detail.url);
     });
   }
 
@@ -181,7 +187,7 @@ export function useEthSSOModal() {
     callback: (transaction: Transaction) => void,
   ): void {
     PopupEvents.events.addEventListener("transactionComplete", (evt) => {
-      void callback((evt as CustomEvent<Transaction>).detail);
+      void callback((evt as TransactionEvent).detail);
     });
   }
 

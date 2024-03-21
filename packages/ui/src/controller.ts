@@ -1,6 +1,6 @@
 import {proxy} from 'valtio/vanilla';
 import {subscribeKey} from 'valtio/vanilla/utils';
-import {ProviderSelectedEvent} from "@chainsafe/eth-sso-common";
+import {ProviderSelectedEvent} from '@chainsafe/eth-sso-common';
 
 export interface ModalControllerState {
   open: boolean;

@@ -1,10 +1,10 @@
 import {LitElement, html, css} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {EthSSOProvider} from '@chainsafe/eth-sso-common';
 import {ModalController} from './controller.js';
 
 import './components/provider_button.js';
 import './components/provider_input.js';
-import {EthSSOProvider} from "@chainsafe/eth-sso-common";
 
 /**
  * An example element.
