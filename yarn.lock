@@ -1459,6 +1459,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@chainsafe/eth-sso-common@workspace:^, @chainsafe/eth-sso-common@workspace:packages/common":
+  version: 0.0.0-use.local
+  resolution: "@chainsafe/eth-sso-common@workspace:packages/common"
+  dependencies:
+    eslint: ^8.54.0
+    typescript: ~5.2
+  languageName: unknown
+  linkType: soft
+
+"@chainsafe/eth-sso-consumer@workspace:packages/consumer":
+  version: 0.0.0-use.local
+  resolution: "@chainsafe/eth-sso-consumer@workspace:packages/consumer"
+  dependencies:
+    eslint: ^8.54.0
+    typescript: ~5.2
+  languageName: unknown
+  linkType: soft
+
+"@chainsafe/eth-sso-provider@workspace:packages/provider":
+  version: 0.0.0-use.local
+  resolution: "@chainsafe/eth-sso-provider@workspace:packages/provider"
+  dependencies:
+    eslint: ^8.54.0
+    typescript: ~5.2
+  languageName: unknown
+  linkType: soft
+
 "@chainsafe/eth-sso-react-demo@workspace:examples/react-demo":
   version: 0.0.0-use.local
   resolution: "@chainsafe/eth-sso-react-demo@workspace:examples/react-demo"
@@ -1505,6 +1532,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chainsafe/eth-sso-ui@workspace:packages/ui"
   dependencies:
+    "@chainsafe/eth-sso-common": "workspace:^"
     "@custom-elements-manifest/analyzer": ^0.6.3
     "@open-wc/testing": ^3.1.5
     "@playwright/test": ^1.40.1

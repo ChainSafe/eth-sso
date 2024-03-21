@@ -1,5 +1,6 @@
 import {proxy} from 'valtio/vanilla';
 import {subscribeKey} from 'valtio/vanilla/utils';
+import {ProviderSelectedEvent} from "@chainsafe/eth-sso-common";
 
 export interface ModalControllerState {
   open: boolean;
@@ -29,11 +30,7 @@ export const ModalController = {
   },
 
   selectProvider(providerUrl: string) {
-    this.events.dispatchEvent(
-      new CustomEvent<{url: string}>('providerSelected', {
-        detail: {url: providerUrl},
-      })
-    );
+    this.events.dispatchEvent(new ProviderSelectedEvent(providerUrl));
     this.close();
   },
 };
