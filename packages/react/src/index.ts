@@ -1,6 +1,7 @@
 import type { EthSSOProvider } from "@chainsafe/eth-sso-ui";
 import { ModalController } from "@chainsafe/eth-sso-ui";
 import { useState } from "react";
+import { AccountId } from "caip";
 import { EthSSOModal } from "./modal";
 import type { Transaction, UserAccount } from "./popupEvents";
 import { PopupEvents } from "./popupEvents";
@@ -72,10 +73,13 @@ export function useEthSSOModal() {
         const currentUrl = popup.location.href;
         if (currentUrl && currentUrl !== initialUrl) {
           const searchParams = new URL(currentUrl).searchParams;
-          const smartAccountAddress = searchParams.get("smart_account_address");
-          if (smartAccountAddress) {
+          const smartAccountAddressParam = searchParams.get(
+            "smart_account_address",
+          );
+          if (smartAccountAddressParam) {
             PopupEvents.setAuthentication({
-              smartAccountAddress,
+              smartAccountAddress: AccountId.parse(smartAccountAddressParam)
+                .address,
             });
             clearInterval(interval);
             popup.close();
@@ -84,6 +88,12 @@ export function useEthSSOModal() {
         }
       } catch (e) {
         /* Ignore DOMException while loading */
+        if (e instanceof DOMException) {
+          return;
+        }
+        clearInterval(interval);
+        popup.close();
+        void close();
       }
     }, 100);
     // TODO: Timeout at some point?

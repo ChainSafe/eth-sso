@@ -2,6 +2,7 @@
 
 import { ECDSAProvider, getRPCProviderOwner } from "@zerodev/sdk";
 import { useCallback } from "react";
+import { AccountId } from "caip";
 import type { AuthRequestSchema } from "@/auth/types";
 import { useWeb3 } from "@/hooks/useWeb3";
 import {
@@ -27,7 +28,13 @@ export function Auth({ redirect_uri, chain_id }: Props): JSX.Element {
       localStorage.setItem(STORAGE_CONNECTION_TIMESTAMP, String(Date.now()));
 
       const url = new URL("sendTransaction", redirect_uri);
-      url.searchParams.set("smart_account_address", contractAddress);
+      url.searchParams.set(
+        "smart_account_address",
+        new AccountId({
+          address: contractAddress,
+          chainId: `eip155:${chain_id}`,
+        }).toString(),
+      );
 
       window.location.replace(url.toString());
     })();
