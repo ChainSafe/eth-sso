@@ -86,7 +86,7 @@ export class EthSSOProviderButton extends LitElement {
   }
 
   override render() {
-    return html`<button @click=${() => this._handleItemClick(this.url ?? '')}>
+    return html`<button @click=${() => this._handleItemClick(this.url ?? '', this.name ?? 'Undefined')}>
       <div class="logo">
         ${this.icon
           ? html`<img alt="provider icon" src=${this.icon} />`
@@ -99,8 +99,8 @@ export class EthSSOProviderButton extends LitElement {
     </button>`;
   }
 
-  private _handleItemClick(providerUrl: string) {
-    ModalController.selectProvider(providerUrl);
+  private _handleItemClick(providerUrl: string, name: string) {
+    ModalController.selectProvider(providerUrl, name);
   }
 }
 

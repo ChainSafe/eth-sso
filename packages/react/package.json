@@ -19,6 +19,7 @@
     },
     "dependencies": {
         "@chainsafe/eth-sso-common": "workspace:^",
+        "@chainsafe/eth-sso-consumer": "workspace:^",
         "@chainsafe/eth-sso-ui": "workspace:^",
         "caip": "^1.1.1"
     },

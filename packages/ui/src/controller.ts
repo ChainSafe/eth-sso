@@ -29,8 +29,8 @@ export const ModalController = {
     state.open = false;
   },
 
-  selectProvider(providerUrl: string) {
-    this.events.dispatchEvent(new ProviderSelectedEvent(providerUrl));
+  selectProvider(providerUrl: string, name: string) {
+    this.events.dispatchEvent(new ProviderSelectedEvent(providerUrl, name));
     this.close();
   },
 };

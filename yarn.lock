@@ -1468,7 +1468,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@chainsafe/eth-sso-consumer@workspace:packages/consumer":
+"@chainsafe/eth-sso-consumer@workspace:^, @chainsafe/eth-sso-consumer@workspace:packages/consumer":
   version: 0.0.0-use.local
   resolution: "@chainsafe/eth-sso-consumer@workspace:packages/consumer"
   dependencies:
@@ -1518,6 +1518,7 @@ __metadata:
   resolution: "@chainsafe/eth-sso-react@workspace:packages/react"
   dependencies:
     "@chainsafe/eth-sso-common": "workspace:^"
+    "@chainsafe/eth-sso-consumer": "workspace:^"
     "@chainsafe/eth-sso-ui": "workspace:^"
     "@types/react": ^18
     caip: ^1.1.1

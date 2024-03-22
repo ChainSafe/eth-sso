@@ -11,6 +11,7 @@ import type {
 } from "@chainsafe/eth-sso-common";
 import { EthSSOModal } from "./modal";
 import { PopupEvents } from "./popupEvents";
+import { utils } from "@chainsafe/eth-sso-consumer";
 
 let ethSSOModalGlobal: EthSSOModal | undefined = undefined;
 
@@ -20,21 +21,6 @@ export function createEthSSOModal(
   if (!ethSSOModalGlobal) {
     ethSSOModalGlobal = new EthSSOModal(options);
   }
-}
-
-function windowOpen(url: string): WindowProxy | null {
-  const width = 600,
-    height = 600;
-  const left = window.innerWidth / 2 - width / 2;
-  const top = window.innerHeight / 2 - height / 2;
-
-  return window.open(
-    url,
-    "",
-    `toolbar=no, location=no, directories=no, status=no, menubar=no, 
-          scrollbars=no, resizable=yes, copyhistory=no, width=${width}, 
-          height=${height}, top=${top}, left=${left}`,
-  );
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -61,7 +47,7 @@ export function useEthSSOModal() {
       const url = `${
         (evt as CustomEvent<EthSSOProvider>).detail.url
       }/auth?redirect_uri=${redirectUrl}&chain_id=${options.chainId}`;
-      const popup = windowOpen(url);
+      const popup = utils.windowOpen(url);
 
       if (popup) {
         setProvider((evt as CustomEvent<EthSSOProvider>).detail);
@@ -122,7 +108,7 @@ export function useEthSSOModal() {
 
     //open popup
     const url = `${provider.url}/sendTransaction?redirect_uri=${redirectUrl}&chain_id=${options.chainId}&transaction=${options.transaction}`;
-    const popup = windowOpen(url);
+    const popup = utils.windowOpen(url);
 
     if (popup) {
       waitAndParsePopupTransactionResults(popup);

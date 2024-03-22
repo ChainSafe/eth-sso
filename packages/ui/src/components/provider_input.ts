@@ -75,7 +75,7 @@ export class EthSSOProviderInput extends LitElement {
     if (!providerUrl.startsWith('http')) {
       providerUrl = 'https://' + providerUrl;
     }
-    ModalController.selectProvider(providerUrl);
+    ModalController.selectProvider(providerUrl, "Custom Provider");
     this._input.value = '';
   }
 

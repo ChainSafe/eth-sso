@@ -4,6 +4,11 @@ export interface EthSSOProvider {
   name: string;
 }
 
+export interface ProviderSelected {
+  url: string;
+  name: string;
+}
+
 export interface UserAccount {
   smartAccountAddress: string;
 }
