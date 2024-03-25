@@ -1482,7 +1482,7 @@ __metadata:
     typescript: ^5
     web3: ^4.2.2
     web3-eth-accounts: ^4.1.1
-    web3-utils: ^4.2.0
+    web3-utils: ^4.2.1
   languageName: unknown
   linkType: soft
 
@@ -15506,6 +15506,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"web3-types@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "web3-types@npm:1.5.0"
+  checksum: b71bf032f126dd2fcda8718d02302da6fc0ce65d0c6eb9d195b14a1c845c5fa2a56f7261217438f86901f5f3a325c0a8507d66c200ef73676aa31b7362acd9fd
+  languageName: node
+  linkType: hard
+
 "web3-utils@npm:^1.3.4":
   version: 1.10.3
   resolution: "web3-utils@npm:1.10.3"
@@ -15546,7 +15553,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-utils@npm:^4.1.1, web3-utils@npm:^4.2.0":
+"web3-utils@npm:^4.1.1":
   version: 4.2.0
   resolution: "web3-utils@npm:4.2.0"
   dependencies:
@@ -15555,6 +15562,19 @@ __metadata:
     web3-types: ^1.4.0
     web3-validator: ^2.0.4
   checksum: 85cf7a41cc162df471ab5496c200a05302b451c7c7c3bbe0607d5b83618dd87b22519709397a387c8b406881e2889f527b2914d4756ab172953230893e66d277
+  languageName: node
+  linkType: hard
+
+"web3-utils@npm:^4.2.1":
+  version: 4.2.1
+  resolution: "web3-utils@npm:4.2.1"
+  dependencies:
+    ethereum-cryptography: ^2.0.0
+    eventemitter3: ^5.0.1
+    web3-errors: ^1.1.4
+    web3-types: ^1.5.0
+    web3-validator: ^2.0.4
+  checksum: 73352c6a7bd2b1c5f792e4b2e139f1d3c37941d70f1bc266eafcf7f611f42848c5e413b62d8dd983aa4b8a0e945a1c0bc166b7bcdb9c3bdb8b4bff7b6cde53ce
   languageName: node
   linkType: hard
 
