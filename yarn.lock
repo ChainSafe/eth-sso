@@ -1472,15 +1472,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@chainsafe/eth-sso-consumer@workspace:packages/consumer"
   dependencies:
-    eslint: ^8.54.0
-    typescript: ~5.2
-  languageName: unknown
-  linkType: soft
-
-"@chainsafe/eth-sso-provider@workspace:packages/provider":
-  version: 0.0.0-use.local
-  resolution: "@chainsafe/eth-sso-provider@workspace:packages/provider"
-  dependencies:
+    "@chainsafe/eth-sso-common": "workspace:^"
     eslint: ^8.54.0
     typescript: ~5.2
   languageName: unknown
