@@ -17,6 +17,7 @@ export async function authenticate(
   let data;
   await onHrefUpdate(
     popup,
+    // eslint-disable-next-line @typescript-eslint/require-await
     async (searchParams) => {
       const smartAccountAddress = searchParams.get("smart_account_address");
       if (smartAccountAddress) {
@@ -48,6 +49,7 @@ export async function sendTransaction(
   let data;
   await onHrefUpdate(
     popup,
+    // eslint-disable-next-line @typescript-eslint/require-await
     async (searchParams) => {
       const txHash = searchParams.get("tx_hash");
       const smartAccountAddress = searchParams.get("smart_account_address");
