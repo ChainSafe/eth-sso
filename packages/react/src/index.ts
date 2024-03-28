@@ -9,9 +9,9 @@ import type {
   ProviderSelectedEvent,
   TransactionEvent,
 } from "@chainsafe/eth-sso-common";
+import { utils } from "@chainsafe/eth-sso-consumer";
 import { EthSSOModal } from "./modal";
 import { PopupEvents } from "./popupEvents";
-import { utils } from "@chainsafe/eth-sso-consumer";
 
 let ethSSOModalGlobal: EthSSOModal | undefined = undefined;
 
