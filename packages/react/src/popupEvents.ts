@@ -1,28 +1,14 @@
-export interface UserAccount {
-  smartAccountAddress: string;
-}
-
-export interface Transaction {
-  smartAccountAddress: string;
-  txHash: string;
-}
+import type { Transaction, UserAccount } from "@chainsafe/eth-sso-common";
+import { TransactionEvent, UserAccountEvent } from "@chainsafe/eth-sso-common";
 
 export const PopupEvents = {
   events: new EventTarget(),
 
   setAuthentication(account: UserAccount) {
-    this.events.dispatchEvent(
-      new CustomEvent<UserAccount>("authenticationSuccess", {
-        detail: account,
-      }),
-    );
+    this.events.dispatchEvent(new UserAccountEvent(account));
   },
 
   setTransaction(transaction: Transaction) {
-    this.events.dispatchEvent(
-      new CustomEvent<Transaction>("transactionComplete", {
-        detail: transaction,
-      }),
-    );
+    this.events.dispatchEvent(new TransactionEvent(transaction));
   },
 };

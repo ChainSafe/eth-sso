@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Transaction as AccountTransaction } from "web3-eth-accounts";
 import type { Transaction } from "web3";
 import { ECDSAProvider, getRPCProviderOwner } from "@zerodev/sdk";
+import { AccountId } from "caip";
 import type { SendTransactionRequestSchema } from "@/sendTransaction/types";
 import { useWeb3 } from "@/hooks/useWeb3";
 import {
@@ -70,7 +71,13 @@ export default function SendTransaction({
       });
 
       const url = new URL("sendTransaction", redirect_uri);
-      url.searchParams.set("smart_account_address", contractAddress);
+      url.searchParams.set(
+        "smart_account_address",
+        new AccountId({
+          address: contractAddress,
+          chainId: `eip155:${chain_id}`,
+        }).toString(),
+      );
       url.searchParams.set("tx_hash", txHash);
 
       if (typeof window !== "undefined") {
