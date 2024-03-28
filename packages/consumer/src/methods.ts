@@ -15,15 +15,20 @@ export async function authenticate(
   if (!popup) throw new Error("Unable to open authentication popup");
 
   let data;
-  // eslint-disable-next-line @typescript-eslint/require-await
-  await onHrefUpdate(popup, async (searchParams) => {
-    const smartAccountAddress = searchParams.get("smart_account_address");
-    if (smartAccountAddress) {
-      data = new UserAccountEvent({ smartAccountAddress });
-      return true;
-    }
-    return false;
-  });
+  await onHrefUpdate(
+    popup,
+    async (searchParams) => {
+      const smartAccountAddress = searchParams.get("smart_account_address");
+      if (smartAccountAddress) {
+        data = new UserAccountEvent({ smartAccountAddress });
+        return true;
+      }
+      return false;
+    },
+    () => {
+      data = new AbortedEvent("User closed PopUp");
+    },
+  );
 
   if (!data) return new AbortedEvent("Time out");
   return data;
@@ -41,16 +46,21 @@ export async function sendTransaction(
   if (!popup) throw new Error("Unable to open authentication popup");
 
   let data;
-  // eslint-disable-next-line @typescript-eslint/require-await
-  await onHrefUpdate(popup, async (searchParams) => {
-    const txHash = searchParams.get("tx_hash");
-    const smartAccountAddress = searchParams.get("smart_account_address");
-    if (txHash && smartAccountAddress) {
-      data = new TransactionEvent({ smartAccountAddress, txHash });
-      return true;
-    }
-    return false;
-  });
+  await onHrefUpdate(
+    popup,
+    async (searchParams) => {
+      const txHash = searchParams.get("tx_hash");
+      const smartAccountAddress = searchParams.get("smart_account_address");
+      if (txHash && smartAccountAddress) {
+        data = new TransactionEvent({ smartAccountAddress, txHash });
+        return true;
+      }
+      return false;
+    },
+    () => {
+      data = new AbortedEvent("User closed PopUp");
+    },
+  );
 
   if (!data) return new AbortedEvent("Time out");
   return data;

@@ -19,12 +19,18 @@ const FIVE_MIN = 5 * 60 * 1000;
 export async function onHrefUpdate(
   popup: WindowProxy,
   callback: (searchParams: URLSearchParams) => Promise<boolean>,
+  onClosed: () => void,
 ): Promise<void> {
   const initialUrl = popup.location.href;
 
   const waiter = new Promise<void>((resolve) =>
     setInterval(() => {
       try {
+        if (popup.closed) {
+          onClosed();
+          resolve();
+        }
+
         const currentUrl = popup.location.href;
         if (currentUrl && currentUrl !== initialUrl) {
           void callback(new URL(currentUrl).searchParams).then((ok) => {
