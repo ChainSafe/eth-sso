@@ -1513,7 +1513,6 @@ __metadata:
     "@chainsafe/eth-sso-consumer": "workspace:^"
     "@chainsafe/eth-sso-ui": "workspace:^"
     "@types/react": ^18
-    caip: ^1.1.1
     eslint: ^8.54.0
     react: ^18.2.0
     typescript: ~5.2

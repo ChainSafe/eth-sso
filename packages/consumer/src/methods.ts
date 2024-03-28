@@ -34,7 +34,7 @@ export async function sendTransaction(
   redirectUrl: string,
   chainId: string,
   transaction: string,
-): Promise<AbortedEvent> {
+): Promise<TransactionEvent | AbortedEvent> {
   const url = `${providerUrl}/sendTransaction?redirect_uri=${redirectUrl}&chain_id=${chainId}&transaction=${transaction}`;
   const popup = windowOpen(url);
 

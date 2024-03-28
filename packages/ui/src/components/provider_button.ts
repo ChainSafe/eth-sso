@@ -86,7 +86,10 @@ export class EthSSOProviderButton extends LitElement {
   }
 
   override render() {
-    return html`<button @click=${() => this._handleItemClick(this.url ?? '', this.name ?? 'Undefined')}>
+    return html`<button
+      @click=${() =>
+        this._handleItemClick(this.url ?? '', this.name ?? 'Undefined')}
+    >
       <div class="logo">
         ${this.icon
           ? html`<img alt="provider icon" src=${this.icon} />`

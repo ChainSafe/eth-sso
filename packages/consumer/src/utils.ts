@@ -15,6 +15,7 @@ export function windowOpen(
   );
 }
 
+const FIVE_MIN = 5 * 60 * 1000;
 export async function onHrefUpdate(
   popup: WindowProxy,
   callback: (searchParams: URLSearchParams) => Promise<boolean>,
@@ -36,7 +37,7 @@ export async function onHrefUpdate(
     }, 250),
   );
 
-  const timeour = new Promise((resolve) => setTimeout(resolve, 1000 * 60 * 5));
+  const timeour = new Promise((resolve) => setTimeout(resolve, FIVE_MIN));
 
   await Promise.race([waiter, timeour]);
   popup.close();
