@@ -7,7 +7,6 @@ import { useEffect, useMemo, useCallback, useState } from "react";
 import { Transaction as TransactionBuilder } from "web3-eth-accounts";
 import type { AbiFunctionFragment } from "web3";
 import { Web3, eth } from "web3";
-import { toHex } from "web3-utils";
 import {
   CHAINSAFE_LOGO_URL,
   CONTRACT_ADDRESS,
@@ -104,7 +103,8 @@ export default function Home(): ReactElement {
 
       void sendTransaction({
         chainId: SEPOLIA_CHAIN_ID,
-        transaction: toHex(transactionData.serialize()),
+        transaction:
+          "0x" + Buffer.from(transactionData.serialize()).toString("hex"),
       });
       onTransactionComplete(setTx);
     },
@@ -125,7 +125,8 @@ export default function Home(): ReactElement {
 
       void sendTransaction({
         chainId: SEPOLIA_CHAIN_ID,
-        transaction: toHex(transactionData.serialize()),
+        transaction:
+          "0x" + Buffer.from(transactionData.serialize()).toString("hex"),
       });
       onTransactionComplete(setTx);
     },
