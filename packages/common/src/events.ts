@@ -19,6 +19,13 @@ class ETHSSOBaseEventClass<Type> extends EventClass<Type> {
       2,
     );
   }
+
+  public clone(): { type: string; detail: Type } {
+    return {
+      type: this.type,
+      detail: this.detail,
+    };
+  }
 }
 
 export class ProviderSelectedEvent extends ETHSSOBaseEventClass<ProviderSelected> {

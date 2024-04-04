@@ -16,35 +16,30 @@ export function windowOpen(
 }
 
 const FIVE_MIN = 5 * 60 * 1000;
-export async function onHrefUpdate(
+export async function handleRedirect(
   popup: WindowProxy,
-  callback: (searchParams: URLSearchParams) => Promise<boolean>,
+  callback: (event: MessageEvent) => Promise<boolean>,
   onClosed: () => void,
 ): Promise<void> {
-  const initialUrl = popup.location.href;
+  const redirected = new Promise<void>((resolve) => {
+    window.addEventListener("message", (message) => {
+      void callback(message).then((ok) => {
+        if (ok) resolve();
+      });
+    });
+  });
 
-  const waiter = new Promise<void>((resolve) =>
+  const closed = new Promise<void>((resolve) =>
     setInterval(() => {
-      try {
-        if (popup.closed) {
-          onClosed();
-          resolve();
-        }
-
-        const currentUrl = popup.location.href;
-        if (currentUrl && currentUrl !== initialUrl) {
-          void callback(new URL(currentUrl).searchParams).then((ok) => {
-            if (ok) resolve();
-          });
-        }
-      } catch (e) {
-        /* Ignore DOMException while loading */
+      if (popup.closed) {
+        onClosed();
+        resolve();
       }
     }, 250),
   );
 
-  const timeour = new Promise((resolve) => setTimeout(resolve, FIVE_MIN));
+  const timeout = new Promise((resolve) => setTimeout(resolve, FIVE_MIN));
 
-  await Promise.race([waiter, timeour]);
+  await Promise.race([redirected, closed, timeout]);
   popup.close();
 }
