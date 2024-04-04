@@ -3,6 +3,7 @@ import {
   AbortedEvent,
   TransactionEvent,
 } from "@chainsafe/eth-sso-common";
+import type { Transaction, UserAccount } from "@chainsafe/eth-sso-common";
 import { handleRedirect, windowOpen } from "./utils";
 
 export async function authenticate(
@@ -18,9 +19,9 @@ export async function authenticate(
   await handleRedirect(
     popup,
     // eslint-disable-next-line @typescript-eslint/require-await
-    async (message) => {
+    async (message: MessageEvent<{ type: string; detail: UserAccount }>) => {
       if (message.data.type && message.data.type === "authenticationSuccess") {
-        data = new UserAccountEvent(message as never);
+        data = new UserAccountEvent(message.data.detail);
         return true;
       }
       return false;
@@ -49,9 +50,9 @@ export async function sendTransaction(
   await handleRedirect(
     popup,
     // eslint-disable-next-line @typescript-eslint/require-await
-    async (message) => {
+    async (message: MessageEvent<{ type: string; detail: Transaction }>) => {
       if (message.data.type && message.data.type === "transactionComplete") {
-        data = new TransactionEvent(message as never);
+        data = new TransactionEvent(message.data.detail);
         return true;
       }
       return false;

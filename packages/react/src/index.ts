@@ -12,6 +12,8 @@ import { methods } from "@chainsafe/eth-sso-consumer";
 import { EthSSOModal } from "./modal";
 import { PopupEvents } from "./popupEvents";
 
+export { useAuthCallback, useSendTransactionCallback } from "./hooks";
+
 let ethSSOModalGlobal: EthSSOModal | undefined = undefined;
 
 export function createEthSSOModal(

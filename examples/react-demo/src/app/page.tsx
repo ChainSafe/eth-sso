@@ -35,7 +35,7 @@ createEthSSOModal({
     // { url: "mpetrunic.eth" },
     // { url: "sso.wallet.connect.com" },
   ],
-  redirectUrl: "http://localhost:3001",
+  redirectUrl: "http://localhost:3001/callback/",
 });
 
 interface Transaction {
