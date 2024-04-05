@@ -1,4 +1,4 @@
-import { parser } from "@chainsafe/eth-sso-consumer";
+import { parser, utils } from "@chainsafe/eth-sso-sdk";
 import { useEffect } from "react";
 
 export function useAuthCallback(
@@ -6,11 +6,7 @@ export function useAuthCallback(
 ): void {
   useEffect(() => {
     const auth = parser.parseAuth(searchParams);
-    if (auth) {
-      if (window.opener || "postMessage" in window.opener)
-        (window.opener as typeof window.parent).postMessage(auth.clone());
-      else window.parent.postMessage(auth.clone());
-    }
+    if (auth) utils.postMessage(auth);
   }, [searchParams]);
 }
 
@@ -19,12 +15,6 @@ export function useSendTransactionCallback(
 ): void {
   useEffect(() => {
     const transaction = parser.parseSendTransaction(searchParams);
-    if (transaction) {
-      if (window.opener || "postMessage" in window.opener)
-        (window.opener as typeof window.parent).postMessage(
-          transaction.clone(),
-        );
-      else window.parent.postMessage(transaction.clone());
-    }
+    if (transaction) utils.postMessage(transaction);
   }, [searchParams]);
 }

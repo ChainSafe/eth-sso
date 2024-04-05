@@ -8,7 +8,7 @@ import type {
   ProviderSelectedEvent,
   TransactionEvent,
 } from "@chainsafe/eth-sso-common";
-import { methods } from "@chainsafe/eth-sso-consumer";
+import { methods } from "@chainsafe/eth-sso-sdk";
 import { EthSSOModal } from "./modal";
 import { PopupEvents } from "./popupEvents";
 

@@ -1,5 +1,5 @@
 {
-  "name": "@chainsafe/eth-sso-consumer",
+  "name": "@chainsafe/eth-sso-sdk",
   "version": "0.0.0",
   "description": "Common package to be shared between modules",
   "main": "./dist/esm/src/index.js",
@@ -15,7 +15,8 @@
     "lint:fix": "yarn run lint --fix"
   },
   "dependencies": {
-    "@chainsafe/eth-sso-common": "workspace:^"
+    "@chainsafe/eth-sso-common": "workspace:^",
+    "is-promise": "^4.0.0"
   },
   "devDependencies": {
     "eslint": "^8.54.0",

@@ -18,8 +18,7 @@ export async function authenticate(
   let data;
   await handleRedirect(
     popup,
-    // eslint-disable-next-line @typescript-eslint/require-await
-    async (message: MessageEvent<{ type: string; detail: UserAccount }>) => {
+    (message: MessageEvent<{ type: string; detail: UserAccount }>) => {
       if (message.data.type && message.data.type === "authenticationSuccess") {
         data = new UserAccountEvent(message.data.detail);
         return true;
@@ -49,8 +48,7 @@ export async function sendTransaction(
   let data;
   await handleRedirect(
     popup,
-    // eslint-disable-next-line @typescript-eslint/require-await
-    async (message: MessageEvent<{ type: string; detail: Transaction }>) => {
+    (message: MessageEvent<{ type: string; detail: Transaction }>) => {
       if (message.data.type && message.data.type === "transactionComplete") {
         data = new TransactionEvent(message.data.detail);
         return true;

@@ -8,7 +8,7 @@ try {
   EventClass = Event as unknown as typeof CustomEvent;
 }
 
-class ETHSSOBaseEventClass<Type> extends EventClass<Type> {
+export class ETHSSOBaseEventClass<Type> extends EventClass<Type> {
   public stringify(): string {
     return JSON.stringify(
       {
