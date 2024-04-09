@@ -27,7 +27,7 @@ export function Auth({ redirect_uri, chain_id }: Props): JSX.Element {
       localStorage.setItem(STORAGE_CONTRACT_ADDRESS, contractAddress);
       localStorage.setItem(STORAGE_CONNECTION_TIMESTAMP, String(Date.now()));
 
-      const url = new URL("sendTransaction", redirect_uri);
+      const url = new URL("auth", redirect_uri);
       url.searchParams.set(
         "smart_account_address",
         new AccountId({
@@ -36,7 +36,7 @@ export function Auth({ redirect_uri, chain_id }: Props): JSX.Element {
         }).toString(),
       );
 
-      window.location.replace(url.toString());
+      window.location.assign(url.toString());
     })();
   }, [provider]);
 

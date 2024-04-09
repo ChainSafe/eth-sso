@@ -33,6 +33,7 @@
   "author": "ChainSafe <info@chainsafe.io>",
   "license": "Apache-2.0",
   "dependencies": {
+    "@chainsafe/eth-sso-common": "workspace:^",
     "lit": "^3.0.0",
     "valtio": "1.11.2"
   },

@@ -7,7 +7,7 @@ import { useEffect, useMemo, useCallback, useState } from "react";
 import { Transaction as TransactionBuilder } from "web3-eth-accounts";
 import type { AbiFunctionFragment } from "web3";
 import { Web3, eth } from "web3";
-import { toHex } from "web3-utils";
+import { bytesToHex } from "web3-utils";
 import {
   CHAINSAFE_LOGO_URL,
   CONTRACT_ADDRESS,
@@ -35,7 +35,7 @@ createEthSSOModal({
     // { url: "mpetrunic.eth" },
     // { url: "sso.wallet.connect.com" },
   ],
-  redirectUrl: "http://localhost:3001",
+  redirectUrl: "http://localhost:3001/callback/",
 });
 
 interface Transaction {
@@ -104,7 +104,7 @@ export default function Home(): ReactElement {
 
       void sendTransaction({
         chainId: SEPOLIA_CHAIN_ID,
-        transaction: toHex(transactionData.serialize()),
+        transaction: bytesToHex(transactionData.serialize()),
       });
       onTransactionComplete(setTx);
     },
@@ -125,7 +125,7 @@ export default function Home(): ReactElement {
 
       void sendTransaction({
         chainId: SEPOLIA_CHAIN_ID,
-        transaction: toHex(transactionData.serialize()),
+        transaction: bytesToHex(transactionData.serialize()),
       });
       onTransactionComplete(setTx);
     },

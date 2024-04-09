@@ -1,0 +1,32 @@
+{
+  "name": "@chainsafe/eth-sso-sdk",
+  "version": "0.0.0",
+  "description": "Common package to be shared between modules",
+  "main": "./dist/esm/src/index.js",
+  "types": "./dist/types/src/index.d.ts",
+  "author": "ChainSafe <info@chainsafe.io>",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build:clean": "rm -rf dist",
+    "build": "yarn run build:clean; tsc --build",
+    "build:watch": "yarn run build:clean; tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint --ext .ts,.tsx '{src, test}/**/*.ts'",
+    "lint:fix": "yarn run lint --fix"
+  },
+  "dependencies": {
+    "@chainsafe/eth-sso-common": "workspace:^",
+    "is-promise": "^4.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.54.0",
+    "typescript": "~5.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chainsafe/eth-sso.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chainsafe/eth-sso/issues"
+  }
+}
