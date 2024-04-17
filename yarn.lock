@@ -3007,6 +3007,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@noble/hashes@npm:^1.3.3":
+  version: 1.4.0
+  resolution: "@noble/hashes@npm:1.4.0"
+  checksum: 8c3f005ee72e7b8f9cff756dfae1241485187254e3f743873e22073d63906863df5d4f13d441b7530ea614b7a093f0d889309f28b59850f33b66cb26a779a4a5
+  languageName: node
+  linkType: hard
+
 "@noble/secp256k1@npm:1.7.1, @noble/secp256k1@npm:~1.7.0":
   version: 1.7.1
   resolution: "@noble/secp256k1@npm:1.7.1"
@@ -3576,7 +3583,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@solana/buffer-layout@npm:^4.0.0":
+"@solana/buffer-layout@npm:^4.0.1":
   version: 4.0.1
   resolution: "@solana/buffer-layout@npm:4.0.1"
   dependencies:
@@ -3586,14 +3593,14 @@ __metadata:
   linkType: hard
 
 "@solana/web3.js@npm:^1.78.4":
-  version: 1.87.6
-  resolution: "@solana/web3.js@npm:1.87.6"
+  version: 1.91.6
+  resolution: "@solana/web3.js@npm:1.91.6"
   dependencies:
-    "@babel/runtime": ^7.23.2
+    "@babel/runtime": ^7.23.4
     "@noble/curves": ^1.2.0
-    "@noble/hashes": ^1.3.1
-    "@solana/buffer-layout": ^4.0.0
-    agentkeepalive: ^4.3.0
+    "@noble/hashes": ^1.3.3
+    "@solana/buffer-layout": ^4.0.1
+    agentkeepalive: ^4.5.0
     bigint-buffer: ^1.1.5
     bn.js: ^5.2.1
     borsh: ^0.7.0
@@ -3601,10 +3608,10 @@ __metadata:
     buffer: 6.0.3
     fast-stable-stringify: ^1.0.0
     jayson: ^4.1.0
-    node-fetch: ^2.6.12
+    node-fetch: ^2.7.0
     rpc-websockets: ^7.5.1
     superstruct: ^0.14.2
-  checksum: 8893237f4382dd417e8a79f369bcfcb77bde1fb506810a07afad0eddd5b9d40c4d426a376f839378700e6f53d522ed5e7f7e0f40d3ede116e7f483cdb1f08ce8
+  checksum: c260e4d004a17fdaf738388d7eef12b96f2e936a11b2a4af72a5bb2f7cd7d5be3fe4104ec3aad74e5fa10126a4ef51587f85a77d798e74d443da2bdab5f755c4
   languageName: node
   linkType: hard
 
@@ -5969,7 +5976,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"agentkeepalive@npm:^4.3.0":
+"agentkeepalive@npm:^4.5.0":
   version: 4.5.0
   resolution: "agentkeepalive@npm:4.5.0"
   dependencies:
@@ -11925,7 +11932,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^2.6.12":
+"node-fetch@npm:^2.6.12, node-fetch@npm:^2.7.0":
   version: 2.7.0
   resolution: "node-fetch@npm:2.7.0"
   dependencies:
